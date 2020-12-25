@@ -24,9 +24,10 @@ class Tracklist with ChangeNotifier {
 
   Future<void> getTracklist(String tracklistUrl) async{
     final url = tracklistUrl;
+    print(url);
     final response = await http.get(url);
     final List<UserTracklist> loadedTracklist = [];
-    final extractedData = json.decode(response.body);
+    final extractedData = json.decode(response.body); //okay got all of this now save it in array and display it.
     print(extractedData);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../providers/get_user.dart' as usr;
+import '../providers/authentication.dart' as usr;
+import '../screens/screen_arguments.dart';
 
 class UserItemInfo extends StatefulWidget {
   final usr.UserItem user;
@@ -28,7 +29,6 @@ class _UserItemInfoState extends State<UserItemInfo> {
           style: TextStyle(fontSize: 20),
         ),
       ),
-      
     );
   }
 }

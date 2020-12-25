@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
-import '../providers/get_user.dart' as usr;
+// import 'package:flutter/material.dart';
+// import '../providers/get_user.dart' as usr;
 
 
-class TracklistWidget extends StatelessWidget {
-  final usr.UserItem user;
+// class TracklistWidget extends StatelessWidget {
+//   final usr.UserItem user;
 
-  TracklistWidget(this.user);
+//   TracklistWidget(this.user);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }

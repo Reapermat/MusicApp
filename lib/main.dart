@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:MusicApp/providers/get_user.dart';
 import 'package:MusicApp/screens/after_login.dart';
 import 'package:MusicApp/screens/user_info.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +21,6 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Authentication(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => GetUser(),
-        ),
-        ChangeNotifierProvider(
           create: (ctx) => Tracklist(),
         ),
       ],
@@ -38,7 +34,7 @@ class MyApp extends StatelessWidget {
         routes: {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AfterLogin.routeName: (ctx) => AfterLogin(),
-          UserInfo.routeName: (ctx) => UserInfo(),
+          //UserInfo.routeName: (ctx) => UserInfo(),
         },
       ),
     );
