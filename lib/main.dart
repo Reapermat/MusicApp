@@ -20,9 +20,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Authentication(),
         ),
-        ChangeNotifierProvider(
-          create: (ctx) => Tracklist(),
-        ),
+        // ChangeNotifierProvider(
+        //   create: (ctx) => Tracklist(),
+        // ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
