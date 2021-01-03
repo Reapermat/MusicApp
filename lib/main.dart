@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
 
-import 'package:MusicApp/screens/after_login.dart';
-import 'package:MusicApp/screens/user_info.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import './providers/authentication.dart';
-import 'screens/login_screen.dart';
+import './providers/search_content.dart';
+import './screens/after_login.dart';
 import 'screens/after_login.dart';
-import './providers/user_tracklist.dart';
+import 'screens/login_screen.dart';
+import 'screens/search_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,6 +24,9 @@ class MyApp extends StatelessWidget {
         // ChangeNotifierProvider(
         //   create: (ctx) => Tracklist(),
         // ),
+        ChangeNotifierProvider(
+          create: (ctx) => SearchContent(),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -34,6 +38,7 @@ class MyApp extends StatelessWidget {
         routes: {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AfterLogin.routeName: (ctx) => AfterLogin(),
+          SearchScreen.routeName: (ctx) => SearchScreen(),
           //UserInfo.routeName: (ctx) => UserInfo(),
         },
       ),

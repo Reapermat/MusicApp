@@ -1,6 +1,5 @@
 class ScreenArguments {
-  final String token;
-  final String tracklist;
+  final String search;
 
-  ScreenArguments({this.token, this.tracklist});
+  ScreenArguments({this.search});
 }

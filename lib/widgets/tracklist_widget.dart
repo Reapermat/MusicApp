@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../providers/authentication.dart' as usr;
 
 
-class TracklistWidget extends StatelessWidget {
+class TracklistWidget extends StatelessWidget { //moze tu dac potem to wszystko we shall see
  
 
   @override

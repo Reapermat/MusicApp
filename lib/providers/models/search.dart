@@ -1,22 +1,30 @@
 import 'dart:convert';
 
-Tracklist tracklistFromJson(String str) => Tracklist.fromJson(json.decode(str));
+Search searchFromJson(String str) => Search.fromJson(json.decode(str));
 
-String tracklistToJson(Tracklist data) => json.encode(data.toJson());
+String searchToJson(Search data) => json.encode(data.toJson());
 
-class Tracklist {
-    Tracklist({
+class Search {
+    Search({
         this.data,
+        this.total,
+        this.next,
     });
 
     List<Datum> data;
+    int total;
+    String next;
 
-    factory Tracklist.fromJson(Map<String, dynamic> json) => Tracklist(
+    factory Search.fromJson(Map<String, dynamic> json) => Search(
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        total: json["total"],
+        next: json["next"],
     );
 
     Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "total": total,
+        "next": next,
     };
 }
 
@@ -27,6 +35,7 @@ class Datum {
         this.title,
         this.titleShort,
         this.titleVersion,
+        this.link,
         this.duration,
         this.rank,
         this.explicitLyrics,
@@ -44,6 +53,7 @@ class Datum {
     String title;
     String titleShort;
     String titleVersion;
+    String link;
     int duration;
     int rank;
     bool explicitLyrics;
@@ -60,7 +70,8 @@ class Datum {
         readable: json["readable"],
         title: json["title"],
         titleShort: json["title_short"],
-        titleVersion: json["title_version"],
+        titleVersion: json["title_version"] == null ? null : json["title_version"],
+        link: json["link"],
         duration: json["duration"],
         rank: json["rank"],
         explicitLyrics: json["explicit_lyrics"],
@@ -78,7 +89,8 @@ class Datum {
         "readable": readable,
         "title": title,
         "title_short": titleShort,
-        "title_version": titleVersion,
+        "title_version": titleVersion == null ? null : titleVersion,
+        "link": link,
         "duration": duration,
         "rank": rank,
         "explicit_lyrics": explicitLyrics,
@@ -154,6 +166,7 @@ class Artist {
     Artist({
         this.id,
         this.name,
+        this.link,
         this.picture,
         this.pictureSmall,
         this.pictureMedium,
@@ -165,6 +178,7 @@ class Artist {
 
     int id;
     String name;
+    String link;
     String picture;
     String pictureSmall;
     String pictureMedium;
@@ -176,6 +190,7 @@ class Artist {
     factory Artist.fromJson(Map<String, dynamic> json) => Artist(
         id: json["id"],
         name: json["name"],
+        link: json["link"],
         picture: json["picture"],
         pictureSmall: json["picture_small"],
         pictureMedium: json["picture_medium"],
@@ -188,6 +203,7 @@ class Artist {
     Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "link": link,
         "picture": picture,
         "picture_small": pictureSmall,
         "picture_medium": pictureMedium,
