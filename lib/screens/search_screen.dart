@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/search_bar.dart';
-import './screen_arguments.dart';
 import 'package:provider/provider.dart';
-import '../providers/search_content.dart';
+
+import './screen_arguments.dart';
 import '../providers/models/search.dart';
+import '../providers/search_content.dart';
 
 class SearchScreen extends StatefulWidget {
   static final routeName = 'search-screen';
@@ -16,25 +15,60 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   Future searchFuture;
   Search _searchElem;
+  final _form = GlobalKey<FormState>();
+  var _isInit = true;
+  String _search;
 
   @override
   void initState() {
     super.initState();
+
     setState(() {
-      searchFuture = _getSearch();
-      searchFuture.then((searchElem) {
-        _searchElem = searchElem;
-        print(_searchElem);
-      });
+      print('initState');
+      // searchFuture = _getSearch();
+      // searchFuture.then((searchElem) {
+      //   _searchElem = searchElem;
+      // });
     });
   }
 
-  _getSearch() async {
-    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    final String search = args.search;
-    await Provider.of<SearchContent>(context, listen: false)
-        .getSearchContent(search);
-    print('hey');
+  @override
+  void didChangeDependencies() {
+    print('dependecies');
+    if (_isInit) {
+      searchFuture = _getSearch();
+    } else {
+      searchFuture = _getSearch(search: _search);
+    }
+    searchFuture.then((searchElem) {
+      _searchElem = searchElem;
+    });
+    super.didChangeDependencies();
+  }
+
+  _getSearch({String search}) async {
+    var provider = Provider.of<SearchContent>(context, listen: false);
+
+    if (_isInit) {
+      final ScreenArguments args = ModalRoute.of(context)
+          .settings
+          .arguments;
+          search = args.search;
+      _search = search;
+    }
+    _search = search;
+
+    return await provider.getSearchContent(_search);
+  }
+
+  _submit(String input) {
+    _isInit = false;
+    final isValid = _form.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    _form.currentState.save();
+    _getSearch(search: input);
   }
 
   @override
@@ -43,38 +77,77 @@ class _SearchScreenState extends State<SearchScreen> {
         appBar: AppBar(
           title: Text('Search Page'),
         ),
-        body: FutureBuilder(
-          future: _getSearch(),
-          builder: (ctx, dataSnapshot) {
-            if (dataSnapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              if (dataSnapshot.error != null) {
-                print(dataSnapshot.error);
-                // ...
-                // Do error handling stuff
-                return Center(
-                  child: Text('An error occurred!'),
-                );
-              } else {
-                //tu ten listView
-                return ListView.builder(
-                  itemCount: _searchElem.total, //zwraca null jakby nie czekalo na ta funkcja juz takie cos mialem niby
-                  itemBuilder: (ctx, i) {
-                    //print (_searchElem.total.toString());
-                    var searchList = _searchElem.data.elementAt(i);
-                    //listile
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(searchList.album.coverSmall),
-                      ),
-                      trailing: Text(searchList.title),
-                    );
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(15),
+          child: Column(
+            children: [
+              Flexible(
+                flex: 1,
+                child: Form(
+                    key: _form,
+                    child: Column(
+                      children: [
+                        // tu jakies errory albo duperele by siem przydalo dac
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Search'),
+                          initialValue: _search,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (input) {
+                            _search = input;
+                            ScreenArguments(search: _search);
+                            _submit(_search);
+                          }, // buttona tu na pewno trza dac
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please provide a value.';
+                            }
+                            return null;
+                          },
+                        )
+                      ],
+                    )),
+                fit: FlexFit.tight,
+              ), //what to do when in this page
+              Flexible(
+                flex: 5,
+                child: FutureBuilder(
+                  future: searchFuture,
+                  builder: (ctx, dataSnapshot) {
+                    if (dataSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else {
+                      if (dataSnapshot.error != null) {
+                        print(dataSnapshot.error);
+                        // ...
+                        // Do error handling stuff
+                        return Center(
+                          child: Text('An error occurred!'),
+                        );
+                      } else {
+                        //tu ten listView
+                        return ListView.builder(
+                          itemCount: _searchElem.data.length,
+                          itemBuilder: (ctx, i) {
+                            var searchList = _searchElem.data.elementAt(i);
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(searchList.album.coverSmall),
+                              ),
+                              title: Text(searchList.title),
+                            );
+                          },
+                        );
+                      }
+                    }
                   },
-                );
-              }
-            }
-          },
+                ),
+              ),
+            ],
+          ),
         ));
   }
 }

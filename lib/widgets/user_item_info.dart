@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 import '../providers/authentication.dart';
 import '../providers/models/tracklist.dart';
 import '../providers/models/user.dart';
-import './search_bar.dart';
+import 'search_bar_main.dart';
 
 class UserItemInfo extends StatefulWidget {
   @override
@@ -43,6 +44,8 @@ class _UserItemInfoState extends State<UserItemInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final assetsAudioPlayer = AssetsAudioPlayer();
+
     return FutureBuilder(
       future: tokenFuture,
       builder: (ctx, dataSnapshot) {
@@ -100,8 +103,15 @@ class _UserItemInfoState extends State<UserItemInfo> {
                             borderRadius: BorderRadius.circular(7),
                             child: GridTile(
                               child: GestureDetector(
-                                onTap: () {
-                                  // tutaj OnClick dac
+                                onTap: () async {
+                                  try {
+                                    print('tracklist duration ${tracklist.duration}');
+                                    await assetsAudioPlayer.open(
+                                      Audio.network(tracklist.preview)  //works but when refresh then 2 start playing 
+                                    );
+                                  } catch (error) {
+                                    throw error;
+                                  }
                                 },
                                 child: Image.network(
                                   tracklist.album.coverMedium,
