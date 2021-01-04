@@ -6,6 +6,7 @@ import '../providers/authentication.dart';
 import '../providers/models/tracklist.dart';
 import '../providers/models/user.dart';
 import 'search_bar_main.dart';
+import 'error_dialog.dart';
 
 class UserItemInfo extends StatefulWidget {
   @override
@@ -56,9 +57,10 @@ class _UserItemInfoState extends State<UserItemInfo> {
             print(dataSnapshot.error);
             // ...
             // Do error handling stuff
-            return Center(
-              child: Text('An error occurred!'),
-            );
+            return ErrorDialog('Try again later');
+            // return Center(
+            //   child: Text('An error occurred!'),
+            // );
           } else {
             return Column(
               // tu flexible jakis dac bo jest problem z umieszczeniem tego wszystkiego
@@ -89,7 +91,16 @@ class _UserItemInfoState extends State<UserItemInfo> {
                   flex: 4,
                   fit: FlexFit.loose,
                   child: RefreshIndicator(
-                    onRefresh: () => _getTracklist(),
+                    onRefresh: () async {
+                      try {
+                        await _getTracklist();
+                      } catch (error) {
+                        await showDialog(
+                          context: context,
+                          builder: (ctx) => ErrorDialog('Try again later'),
+                        );
+                      }
+                    },
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.6,
                       width: MediaQuery.of(context).size.width,
@@ -105,10 +116,12 @@ class _UserItemInfoState extends State<UserItemInfo> {
                               child: GestureDetector(
                                 onTap: () async {
                                   try {
-                                    print('tracklist duration ${tracklist.duration}');
+                                    print(
+                                        'tracklist duration ${tracklist.duration}');
                                     await assetsAudioPlayer.open(
-                                      Audio.network(tracklist.preview)  //works but when refresh then 2 start playing 
-                                    );
+                                        Audio.network(tracklist
+                                            .preview) //works but when refresh then 2 start playing
+                                        );
                                   } catch (error) {
                                     throw error;
                                   }

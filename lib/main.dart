@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +7,8 @@ import './screens/after_login.dart';
 import 'screens/after_login.dart';
 import 'screens/login_screen.dart';
 import 'screens/search_screen.dart';
+import 'screens/screen_arguments.dart';
+import 'widgets/error_dialog.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: MyHomePage(title: 'Flutter Demo Home Page'),
+        initialRoute: '/',
         routes: {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AfterLogin.routeName: (ctx) => AfterLogin(),
@@ -55,19 +57,45 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool error = false;
+
   @override
   void initState() {
     super.initState();
   }
 
   @override
+  void didChangeDependencies() {
+    if (ModalRoute.of(context).settings.arguments != null) {
+      final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+      error = args.error;
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: EdgeInsets.all(30),
-        height: MediaQuery.of(context).size.height,
-        width: 400,
-      ),
+      body:
+          //tu ten error i jak sie kliknie ok to trza dac wartosc tego shitu na false;
+          error == true
+              ? AlertDialog(
+                  title: Text('An Error Occured!'),
+                  content: Text('Check internet connection'),
+                  actions: <Widget>[
+                      FlatButton(
+                          child: Text('Okay'),
+                          onPressed: () {
+                            setState(() {
+                              error = false;
+                            });
+                          })
+                    ])
+              : Container(
+                  margin: EdgeInsets.all(30),
+                  height: MediaQuery.of(context).size.height,
+                  width: 400,
+                ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).pushNamed(LoginScreen.routeName);

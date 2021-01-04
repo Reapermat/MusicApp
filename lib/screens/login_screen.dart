@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'package:MusicApp/screens/screen_arguments.dart';
+
+import '../widgets/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import '../providers/authentication.dart';
@@ -17,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   StreamSubscription _onDestroy;
   StreamSubscription<String> _onUrlChanged;
   StreamSubscription<WebViewStateChanged> _onStateChanged;
+  StreamSubscription<WebViewHttpError> _onError;
 
   String code;
 
@@ -44,6 +48,26 @@ class _LoginScreenState extends State<LoginScreen> {
     _onStateChanged =
         flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
       print("onStateChanged: ${state.type} ${state.url}");
+    });
+
+    _onError =
+        flutterWebviewPlugin.onHttpError.listen((WebViewHttpError state) {
+      if (state.code == '-2') {
+        //po paru sekundach moze wrocic tam i dac alert ze cos poszlo nie tak
+        flutterWebviewPlugin.close().then((_) {
+          Future.delayed(Duration(seconds: 2)).then((_) {
+            Navigator.of(context)
+                .pushNamed('/', arguments: ScreenArguments(error: true));
+            print('this is opening?');
+          });
+        });
+        dispose();
+        //then from the package  it just shows circular indicator
+        // flutterWebviewPlugin.show().catchError((error){
+        //   print(error);
+        //   return ErrorDialog('An error has accured');
+        // });
+      }
     });
 
     // Add a listener to on url changed
@@ -74,9 +98,10 @@ class _LoginScreenState extends State<LoginScreen> {
         "https://connect.deezer.com/oauth/auth.php?app_id=$appId&redirect_uri=$redirectUri&perms=basic_access,email";
 
     return new WebviewScaffold(
-        url: loginUrl,
-        appBar: new AppBar(
-          title: new Text("Login to Deezer..."),
-        ));
+      url: loginUrl,
+      appBar: new AppBar(
+        title: new Text("Login to Deezer..."),
+      ),
+    );
   }
 }

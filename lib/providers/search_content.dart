@@ -15,12 +15,9 @@ class SearchContent extends ChangeNotifier {
     try {
       final response = await http.get(url);
       _search = searchFromJson(response.body);
-      print(response.body);
-      print(url);
-      print(_search);
       return _search;
     } catch (error) {
-      throw error;
+      return throw error;
     }
   }
 }

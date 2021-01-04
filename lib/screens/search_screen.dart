@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import './screen_arguments.dart';
 import '../providers/models/search.dart';
 import '../providers/search_content.dart';
+import '../widgets/error_dialog.dart';
 
 class SearchScreen extends StatefulWidget {
   static final routeName = 'search-screen';
@@ -58,7 +59,11 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     _search = search;
 
-    return await provider.getSearchContent(_search);
+    try{
+      return await provider.getSearchContent(_search);
+    }catch(error){
+      return throw error;
+    }
   }
 
   _submit(String input) {
@@ -97,7 +102,11 @@ class _SearchScreenState extends State<SearchScreen> {
                           onFieldSubmitted: (input) {
                             _search = input;
                             ScreenArguments(search: _search);
+                            try{
                             _submit(_search);
+                            }catch(error){
+                             return ErrorDialog('Try again later');
+                            }
                           }, // buttona tu na pewno trza dac
                           validator: (value) {
                             if (value.isEmpty) {
@@ -123,9 +132,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         print(dataSnapshot.error);
                         // ...
                         // Do error handling stuff
-                        return Center(
-                          child: Text('An error occurred!'),
-                        );
+                        // return Center(
+                        //   child: Text('An error occurred!'),
+                        // );
+                        return ErrorDialog('Try again later');
                       } else {
                         //tu ten listView
                         return ListView.builder(

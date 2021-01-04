@@ -1,5 +1,6 @@
 class ScreenArguments {
   final String search;
+  final bool error;
 
-  ScreenArguments({this.search});
+  ScreenArguments({this.search, this.error});
 }
