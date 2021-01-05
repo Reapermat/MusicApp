@@ -1,3 +1,4 @@
+import '../screens/screen_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -14,16 +15,19 @@ class UserItemInfo extends StatefulWidget {
 }
 
 class _UserItemInfoState extends State<UserItemInfo> {
-  Future tokenFuture;
+  Future _tokenFuture;
   Tracklist _tracklist;
   User _userList;
+  Audio _audio;
+  final _assetsAudioPlayer = AssetsAudioPlayer.withId(
+      "Audio_player"); // send this via that thing at we'll see
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      tokenFuture = _getToken();
-      tokenFuture.then((user) {
+      _tokenFuture = _getToken();
+      _tokenFuture.then((user) {
         _userList = user[0];
         _tracklist = user[1];
       });
@@ -45,10 +49,8 @@ class _UserItemInfoState extends State<UserItemInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final assetsAudioPlayer = AssetsAudioPlayer();
-
     return FutureBuilder(
-      future: tokenFuture,
+      future: _tokenFuture,
       builder: (ctx, dataSnapshot) {
         if (dataSnapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -58,9 +60,6 @@ class _UserItemInfoState extends State<UserItemInfo> {
             // ...
             // Do error handling stuff
             return ErrorDialog('Try again later');
-            // return Center(
-            //   child: Text('An error occurred!'),
-            // );
           } else {
             return Column(
               // tu flexible jakis dac bo jest problem z umieszczeniem tego wszystkiego
@@ -116,14 +115,33 @@ class _UserItemInfoState extends State<UserItemInfo> {
                               child: GestureDetector(
                                 onTap: () async {
                                   try {
-                                    print(
-                                        'tracklist duration ${tracklist.duration}');
-                                    await assetsAudioPlayer.open(
-                                        Audio.network(tracklist
-                                            .preview) //works but when refresh then 2 start playing
-                                        );
+                                    if (_assetsAudioPlayer.isPlaying.value) {
+                                      _assetsAudioPlayer.stop();
+                                    }
+                                    _audio = Audio.network(
+                                      '${tracklist.preview}',
+                                      metas: Metas(
+                                        title: tracklist.title,
+                                        artist: tracklist.artist.name,
+                                        album: tracklist.album.title,
+                                        image: MetasImage.network(
+                                            tracklist.album.coverMedium),
+                                      ),
+                                    );
+                                    await _assetsAudioPlayer
+                                        .open(
+                                      _audio,
+                                      showNotification: true,
+                                    )
+                                        .catchError((error) {
+                                      return throw error;
+                                    });
                                   } catch (error) {
-                                    throw error;
+                                    await showDialog(
+                                      context: context,
+                                      builder: (ctx) =>
+                                          ErrorDialog('Try again later'),
+                                    );
                                   }
                                 },
                                 child: Image.network(
@@ -151,6 +169,15 @@ class _UserItemInfoState extends State<UserItemInfo> {
                     ),
                   ),
                 ),
+                _assetsAudioPlayer != null
+                    ? Flexible(
+                        //tutaj jak zacznie grac to sie powinno pokazac np na dole TO JEST W PLIKU MAIN_MULTIPLES.DART i dziala raczej
+                        child: AudioWidget.network(
+                          child: null,
+                          url: null,
+                        ),
+                      )
+                    : Flexible(child: null, flex: 0),
               ],
             );
           }

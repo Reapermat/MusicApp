@@ -30,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _onDestroy.cancel();
     _onUrlChanged.cancel();
     _onStateChanged.cancel();
+    _onError.cancel();
     flutterWebviewPlugin.dispose();
     super.dispose();
   }

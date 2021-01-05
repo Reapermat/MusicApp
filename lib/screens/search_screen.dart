@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:provider/provider.dart';
 
 import './screen_arguments.dart';
@@ -14,11 +15,13 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  Future searchFuture;
+  Future _searchFuture;
   Search _searchElem;
   final _form = GlobalKey<FormState>();
   var _isInit = true;
   String _search;
+  final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
+  Audio _audio;
 
   @override
   void initState() {
@@ -37,11 +40,11 @@ class _SearchScreenState extends State<SearchScreen> {
   void didChangeDependencies() {
     print('dependecies');
     if (_isInit) {
-      searchFuture = _getSearch();
+      _searchFuture = _getSearch();
     } else {
-      searchFuture = _getSearch(search: _search);
+      _searchFuture = _getSearch(search: _search);
     }
-    searchFuture.then((searchElem) {
+    _searchFuture.then((searchElem) {
       _searchElem = searchElem;
     });
     super.didChangeDependencies();
@@ -51,17 +54,15 @@ class _SearchScreenState extends State<SearchScreen> {
     var provider = Provider.of<SearchContent>(context, listen: false);
 
     if (_isInit) {
-      final ScreenArguments args = ModalRoute.of(context)
-          .settings
-          .arguments;
-          search = args.search;
-      _search = search;
+      final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+      search = args.search;
+      // _search = search;
     }
     _search = search;
 
-    try{
+    try {
       return await provider.getSearchContent(_search);
-    }catch(error){
+    } catch (error) {
       return throw error;
     }
   }
@@ -94,7 +95,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     key: _form,
                     child: Column(
                       children: [
-                        // tu jakies errory albo duperele by siem przydalo dac
                         TextFormField(
                           decoration: InputDecoration(labelText: 'Search'),
                           initialValue: _search,
@@ -102,10 +102,10 @@ class _SearchScreenState extends State<SearchScreen> {
                           onFieldSubmitted: (input) {
                             _search = input;
                             ScreenArguments(search: _search);
-                            try{
-                            _submit(_search);
-                            }catch(error){
-                             return ErrorDialog('Try again later');
+                            try {
+                              _submit(_search);
+                            } catch (error) {
+                              return ErrorDialog('Try again later');
                             }
                           }, // buttona tu na pewno trza dac
                           validator: (value) {
@@ -122,7 +122,7 @@ class _SearchScreenState extends State<SearchScreen> {
               Flexible(
                 flex: 5,
                 child: FutureBuilder(
-                  future: searchFuture,
+                  future: _searchFuture,
                   builder: (ctx, dataSnapshot) {
                     if (dataSnapshot.connectionState ==
                         ConnectionState.waiting) {
@@ -137,17 +137,49 @@ class _SearchScreenState extends State<SearchScreen> {
                         // );
                         return ErrorDialog('Try again later');
                       } else {
-                        //tu ten listView
                         return ListView.builder(
                           itemCount: _searchElem.data.length,
                           itemBuilder: (ctx, i) {
                             var searchList = _searchElem.data.elementAt(i);
-                            return ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(searchList.album.coverSmall),
+                            return GestureDetector(
+                              onTap: () async {
+                                try {
+                                  if (_assetsAudioPlayer.isPlaying.value) {
+                                    _assetsAudioPlayer.stop();
+                                  }
+                                  _audio = Audio.network(
+                                    '${searchList.preview}',
+                                    metas: Metas(
+                                      title: searchList.title,
+                                      artist: searchList.artist.name,
+                                      album: searchList.album.title,
+                                      image: MetasImage.network(
+                                          searchList.album.coverMedium),
+                                    ),
+                                  );
+                                  await _assetsAudioPlayer
+                                      .open(
+                                    _audio,
+                                    showNotification: true,
+                                  )
+                                      .catchError((error) {
+                                    return throw error;
+                                  });
+                                } catch (error) {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (ctx) =>
+                                        ErrorDialog('Try again later'),
+                                  );
+                                }
+                              },
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(searchList.album.coverSmall),
+                                ),
+                                title: Text(searchList.title),
                               ),
-                              title: Text(searchList.title),
                             );
                           },
                         );
