@@ -6,6 +6,7 @@ import './screen_arguments.dart';
 import '../providers/models/search.dart';
 import '../providers/search_content.dart';
 import '../widgets/error_dialog.dart';
+import '../providers/models/audio_player.dart';
 
 class SearchScreen extends StatefulWidget {
   static final routeName = 'search-screen';
@@ -21,19 +22,14 @@ class _SearchScreenState extends State<SearchScreen> {
   var _isInit = true;
   String _search;
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
+  AudioPlayer _audioPlayer; //musibyc taki sam jak tamten
   Audio _audio;
 
   @override
   void initState() {
     super.initState();
 
-    setState(() {
-      print('initState');
-      // searchFuture = _getSearch();
-      // searchFuture.then((searchElem) {
-      //   _searchElem = searchElem;
-      // });
-    });
+    setState(() {});
   }
 
   @override
@@ -47,16 +43,18 @@ class _SearchScreenState extends State<SearchScreen> {
     _searchFuture.then((searchElem) {
       _searchElem = searchElem;
     });
+    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+    if (args != null) {
+      _audioPlayer = args.audioPlayer;
+    }
     super.didChangeDependencies();
   }
 
   _getSearch({String search}) async {
     var provider = Provider.of<SearchContent>(context, listen: false);
-
     if (_isInit) {
       final ScreenArguments args = ModalRoute.of(context).settings.arguments;
       search = args.search;
-      // _search = search;
     }
     _search = search;
 
@@ -157,6 +155,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                           searchList.album.coverMedium),
                                     ),
                                   );
+                                  // print('you what mate ${_audioPlayer.getTitle}');
+                                  _audioPlayer = AudioPlayer(
+                                      audio: _audio,
+                                      title: searchList.title,
+                                      imageUrl: searchList.album
+                                          .coverMedium); //musibyc taki sam jak tamten
+                                  ScreenArguments(audioPlayer: _audioPlayer);
                                   await _assetsAudioPlayer
                                       .open(
                                     _audio,
