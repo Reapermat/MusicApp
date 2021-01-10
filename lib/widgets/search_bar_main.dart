@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../screens/search_screen.dart';
 
-class SearchBar extends StatefulWidget {
+class SearchBarMain extends StatefulWidget {
   @override
-  _SearchBarState createState() => _SearchBarState();
+  _SearchBarMainState createState() => _SearchBarMainState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _SearchBarMainState extends State<SearchBarMain> {
   final _form = GlobalKey<FormState>();
 
   void _submit(String input) {
@@ -21,8 +21,12 @@ class _SearchBarState extends State<SearchBar> {
     //if in after login then:
     print('route is ${ModalRoute.of(context).settings.name}');
     if (ModalRoute.of(context).settings.name != 'search-screen') {
-      Navigator.of(context).pushNamed(SearchScreen.routeName,
-          arguments: ScreenArguments(search: input));
+      print('input: $input');
+      Navigator.of(context).pushNamed(
+        SearchScreen.routeName,
+        arguments: input,
+        // maybe its not sending it correctly
+      );
     }
   }
 

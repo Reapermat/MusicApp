@@ -16,7 +16,11 @@ class _AfterLoginState extends State<AfterLogin> {
       appBar: AppBar(
         title: Text('Front Page'),
       ),
-      body: UserItemInfo(),
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(10),
+          child: UserItemInfo()),
     );
   }
 }

@@ -7,9 +7,14 @@ import '../providers/models/search.dart';
 import '../providers/search_content.dart';
 import '../widgets/error_dialog.dart';
 import '../providers/models/audio_player.dart';
+import '../widgets/search_listview.dart';
+import '../widgets/player_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   static final routeName = 'search-screen';
+
+  // SearchScreen({this.search});
+  // String search;
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -20,181 +25,145 @@ class _SearchScreenState extends State<SearchScreen> {
   Search _searchElem;
   final _form = GlobalKey<FormState>();
   var _isInit = true;
-  String _search;
-  final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
-  AudioPlayer _audioPlayer; //musibyc taki sam jak tamten
-  Audio _audio;
+  // final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
+  // Audio _audio;
+  AudioPlayer _audioPlayer;
+  String search;
+  bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-
-    setState(() {});
   }
 
   @override
   void didChangeDependencies() {
     print('dependecies');
+
+    search = ModalRoute.of(context).settings.arguments as String;
+
     if (_isInit) {
       _searchFuture = _getSearch();
-    } else {
-      _searchFuture = _getSearch(search: _search);
     }
     _searchFuture.then((searchElem) {
       _searchElem = searchElem;
     });
-    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    if (args != null) {
-      _audioPlayer = args.audioPlayer;
-    }
     super.didChangeDependencies();
   }
 
-  _getSearch({String search}) async {
+  _getSearch() async {
     var provider = Provider.of<SearchContent>(context, listen: false);
-    if (_isInit) {
-      final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-      search = args.search;
-    }
-    _search = search;
-
     try {
-      return await provider.getSearchContent(_search);
+      print('from getSearch $search');
+      return await provider.getSearchContent(search);
     } catch (error) {
       return throw error;
     }
   }
 
   _submit(String input) {
+    print('should be in here');
     _isInit = false;
     final isValid = _form.currentState.validate();
     if (!isValid) {
       return;
     }
     _form.currentState.save();
-    _getSearch(search: input);
+
+    search = input;
+    _searchFuture = _getSearch();
+    _searchFuture.then((searchElem) {
+      _searchElem = searchElem;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Search Page'),
-        ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Flexible(
-                flex: 1,
-                child: Form(
-                    key: _form,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Search'),
-                          initialValue: _search,
-                          textInputAction: TextInputAction.done,
-                          onFieldSubmitted: (input) {
-                            _search = input;
-                            ScreenArguments(search: _search);
-                            try {
-                              _submit(_search);
-                            } catch (error) {
-                              return ErrorDialog('Try again later');
-                            }
-                          }, // buttona tu na pewno trza dac
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please provide a value.';
-                            }
-                            return null;
-                          },
-                        )
-                      ],
-                    )),
-                fit: FlexFit.tight,
-              ), //what to do when in this page
-              Flexible(
-                flex: 5,
-                child: FutureBuilder(
-                  future: _searchFuture,
-                  builder: (ctx, dataSnapshot) {
-                    if (dataSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+      appBar: AppBar(
+        title: Text('Search Page'),
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Flexible(
+              flex: 1,
+              child: Form(
+                  key: _form,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Search'),
+                        initialValue: search,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (input) {
+                          search = input;
+                          // ScreenArguments(search: search);
+                          try {
+                            _submit(search);
+                          } catch (error) {
+                            return ErrorDialog('Try again later');
+                          }
+                        }, // buttona tu na pewno trza dac
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please provide a value.';
+                          }
+                          return null;
+                        },
+                      )
+                    ],
+                  )),
+              fit: FlexFit.tight,
+            ), //what to do when in this page
+            Flexible(
+              flex: 4,
+              child: FutureBuilder(
+                future: _searchFuture,
+                builder: (ctx, dataSnapshot) {
+                  if (dataSnapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    if (dataSnapshot.error != null) {
+                      print(dataSnapshot.error);
+                      return ErrorDialog('Try again later');
                     } else {
-                      if (dataSnapshot.error != null) {
-                        print(dataSnapshot.error);
-                        // ...
-                        // Do error handling stuff
-                        // return Center(
-                        //   child: Text('An error occurred!'),
-                        // );
-                        return ErrorDialog('Try again later');
-                      } else {
-                        return ListView.builder(
-                          itemCount: _searchElem.data.length,
-                          itemBuilder: (ctx, i) {
-                            var searchList = _searchElem.data.elementAt(i);
-                            return GestureDetector(
-                              onTap: () async {
-                                try {
-                                  if (_assetsAudioPlayer.isPlaying.value) {
-                                    _assetsAudioPlayer.stop();
-                                  }
-                                  _audio = Audio.network(
-                                    '${searchList.preview}',
-                                    metas: Metas(
-                                      title: searchList.title,
-                                      artist: searchList.artist.name,
-                                      album: searchList.album.title,
-                                      image: MetasImage.network(
-                                          searchList.album.coverMedium),
-                                    ),
-                                  );
-                                  // print('you what mate ${_audioPlayer.getTitle}');
-                                  _audioPlayer = AudioPlayer(
-                                      audio: _audio,
-                                      title: searchList.title,
-                                      imageUrl: searchList.album
-                                          .coverMedium); //musibyc taki sam jak tamten
-                                  ScreenArguments(audioPlayer: _audioPlayer);
-                                  await _assetsAudioPlayer
-                                      .open(
-                                    _audio,
-                                    showNotification: true,
-                                  )
-                                      .catchError((error) {
-                                    return throw error;
-                                  });
-                                } catch (error) {
-                                  await showDialog(
-                                    context: context,
-                                    builder: (ctx) =>
-                                        ErrorDialog('Try again later'),
-                                  );
-                                }
-                              },
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(searchList.album.coverSmall),
-                                ),
-                                title: Text(searchList.title),
-                              ),
-                            );
-                          },
-                        );
-                      }
+                      return ListView.builder(
+                        itemCount: _searchElem.data.length,
+                        itemBuilder: (ctx, i) {
+                          return SearchListView(
+                            searchElem: _searchElem,
+                            i: i,
+                            onSongChange: (bool val) {
+                              _isPlaying = val;
+                              print('isPlaying $_isPlaying');
+                            },
+                            onAudioplayerChange: (AudioPlayer audio) {
+                              setState(() {
+                                _audioPlayer = audio;
+                              });
+                            },
+                          );
+                        },
+                      );
                     }
-                  },
-                ),
+                  }
+                },
               ),
-            ],
-          ),
-        ));
+            ),
+            //need to put player below
+            _isPlaying
+                ? Flexible(
+                    child: PlayerWidget(audioPlayer: _audioPlayer),
+                    flex: 1,
+                  )
+                : Flexible(child: Container(), flex: 0),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -46,18 +46,6 @@ class _UserItemInfoState extends State<UserItemInfo> {
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    print('dependecies');
-    // final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    // if (args != null) {
-    //   _audioPlayer = args.audioPlayer;
-    //   print('is nul?');
-    // }
-
-    super.didChangeDependencies();
-  }
-
   _getToken() async {
     return await Provider.of<Authentication>(context, listen: false).getToken();
   }
@@ -82,26 +70,22 @@ class _UserItemInfoState extends State<UserItemInfo> {
         } else {
           if (dataSnapshot.error != null) {
             print(dataSnapshot.error);
-            // ...
-            // Do error handling stuff
             return ErrorDialog('Try again later');
           } else {
-            //tu stworzyc ta liste np _playlist
             if (_isInit) {
               creatingPlaylist();
               _isInit = false;
             }
             return Column(
-              // tu flexible jakis dac bo jest problem z umieszczeniem tego wszystkiego
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   flex: 1,
                   fit: FlexFit.loose,
                   child: Container(
-                    padding: EdgeInsets.all(15),
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    width: MediaQuery.of(context).size.width,
+                    // padding: EdgeInsets.all(10),
+                    // height: MediaQuery.of(context).size.height * 0.1,
+                    // width: MediaQuery.of(context).size.width,
                     child: ListTile(
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(4.0),
@@ -115,7 +99,7 @@ class _UserItemInfoState extends State<UserItemInfo> {
                     ),
                   ),
                 ),
-                Flexible(child: SearchBar()),
+                Flexible(flex: 0, child: SearchBarMain()),
                 Flexible(
                   flex: 4,
                   fit: FlexFit.loose,
@@ -134,9 +118,9 @@ class _UserItemInfoState extends State<UserItemInfo> {
                       }
                     },
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(15),
+                      // height: MediaQuery.of(context).size.height * 0.6,
+                      // width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(10),
                       child: GridView.builder(
                         padding: const EdgeInsets.all(5.0),
                         itemCount: _tracklist.data.length,
@@ -145,7 +129,7 @@ class _UserItemInfoState extends State<UserItemInfo> {
                             playlist: _playlist,
                             i: i,
                             onSongChange: (bool val) {
-                                _isPlaying = val;
+                              _isPlaying = val;
                             },
                             onAudioplayerChange: (AudioPlayer audio) {
                               setState(() {
@@ -153,75 +137,6 @@ class _UserItemInfoState extends State<UserItemInfo> {
                               });
                             },
                           );
-                          // var tracklist = _tracklist.data.elementAt(i);
-                          //tu ciagle usuwa tile ktory nie jest widoczny i psuje to czasami klikadlo
-                          // https://stackoverflow.com/questions/51071906/how-to-keep-the-state-of-my-widgets-after-scrolling
-                          // _playlist.audios.insert(
-                          //     i,
-                          //     Audio.network(
-                          //       '${tracklist.preview}',
-                          //       metas: Metas(
-                          //         title: tracklist.title,
-                          //         artist: tracklist.artist.name,
-                          //         album: tracklist.album.title,
-                          //         image: MetasImage.network(
-                          //             tracklist.album.coverMedium),
-                          //       ),
-                          //     ));
-                          // print(
-                          //     'this is playlist ${_playlist.audios.elementAt(i).metas.title}');
-                          // return ClipRRect(
-                          //   borderRadius: BorderRadius.circular(7),
-                          // child: GridTile(
-                          //   child: GestureDetector(
-                          //     onTap: () async {
-                          //       try {
-                          //         _index = i;
-                          //         setState(() {
-                          //           if (_assetsAudioPlayer.isPlaying.value) {
-                          //             _assetsAudioPlayer.stop();
-                          //           }
-                          //         });
-
-                          //         print('this is the main one $i');
-                          //         _audioPlayer = AudioPlayer(
-                          //             audio: _playlist.audios.elementAt(i),
-                          //             title: _playlist.audios
-                          //                 .elementAt(i)
-                          //                 .metas
-                          //                 .title,
-                          //             imageUrl: _playlist.audios
-                          //                 .elementAt(i)
-                          //                 .metas
-                          //                 .image
-                          //                 .path);
-                          //         print(
-                          //             'this is main title ${_playlist.audios.elementAt(i).metas.title}');
-                          //         await startMusic(_playlist, i);
-                          //         ScreenArguments(audioPlayer: _audioPlayer);
-                          //       } catch (error) {
-                          //         await showDialog(
-                          //           context: context,
-                          //           builder: (ctx) =>
-                          //               ErrorDialog('Try again later'),
-                          //         );
-                          //       }
-                          //     },
-                          //     child: Image.network(
-                          //       tracklist.album.coverMedium,
-                          //       fit: BoxFit.cover,
-                          //     ),
-                          //   ),
-                          //   footer: GridTileBar(
-                          //     backgroundColor: Colors.black87,
-                          //     title: Text(
-                          //       tracklist
-                          //           .title, // spoko by bylo jakos caly teskt pokazac jak by byl za dlugi - taka animacje
-                          //       textAlign: TextAlign.center,
-                          //     ),
-                          //   ),
-                          // ),
-                          // );
                         },
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -234,9 +149,7 @@ class _UserItemInfoState extends State<UserItemInfo> {
                 ),
                 _isPlaying
                     ? Flexible(
-                        //za szybko pokazuje chyba
-                        child: PlayerWidget(
-                            audioPlayer: _audioPlayer), //send playList!
+                        child: PlayerWidget(audioPlayer: _audioPlayer),
                         flex: 1,
                       )
                     : Flexible(child: Container(), flex: 0),
