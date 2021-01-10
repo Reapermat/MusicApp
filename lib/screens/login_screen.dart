@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:MusicApp/screens/screen_arguments.dart';
 
-import '../widgets/error_dialog.dart';
+import 'package:MusicApp/screens/screen_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import '../providers/authentication.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/authentication.dart';
 import 'after_login.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -25,6 +25,8 @@ class _UserItemInfoState extends State<UserItemInfo> {
   Playlist _playlist = Playlist();
   AudioPlayer _audioPlayer;
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
+  bool _isPlaying = false;
+  bool _isInit = true;
 
   @override
   void initState() {
@@ -47,11 +49,11 @@ class _UserItemInfoState extends State<UserItemInfo> {
   @override
   void didChangeDependencies() {
     print('dependecies');
-    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    if (args != null) {
-      _audioPlayer = args.audioPlayer;
-      print('is nul?');
-    }
+    // final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+    // if (args != null) {
+    //   _audioPlayer = args.audioPlayer;
+    //   print('is nul?');
+    // }
 
     super.didChangeDependencies();
   }
@@ -65,6 +67,7 @@ class _UserItemInfoState extends State<UserItemInfo> {
     return await provider.getTracklist(provider.getTrack).then((tracklist) {
       setState(() {
         _tracklist = tracklist;
+        creatingPlaylist();
       });
     });
   }
@@ -84,7 +87,10 @@ class _UserItemInfoState extends State<UserItemInfo> {
             return ErrorDialog('Try again later');
           } else {
             //tu stworzyc ta liste np _playlist
-            creatingPlaylist();
+            if (_isInit) {
+              creatingPlaylist();
+              _isInit = false;
+            }
             return Column(
               // tu flexible jakis dac bo jest problem z umieszczeniem tego wszystkiego
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,10 +142,17 @@ class _UserItemInfoState extends State<UserItemInfo> {
                         itemCount: _tracklist.data.length,
                         itemBuilder: (ctx, i) {
                           return GridtileUser(
-                              audioPlayer: _audioPlayer,
-                              playlist: _playlist,
-                              tracklist: _tracklist,
-                              i: i);
+                            playlist: _playlist,
+                            i: i,
+                            onSongChange: (bool val) {
+                                _isPlaying = val;
+                            },
+                            onAudioplayerChange: (AudioPlayer audio) {
+                              setState(() {
+                                _audioPlayer = audio;
+                              });
+                            },
+                          );
                           // var tracklist = _tracklist.data.elementAt(i);
                           //tu ciagle usuwa tile ktory nie jest widoczny i psuje to czasami klikadlo
                           // https://stackoverflow.com/questions/51071906/how-to-keep-the-state-of-my-widgets-after-scrolling
@@ -219,10 +232,11 @@ class _UserItemInfoState extends State<UserItemInfo> {
                     ),
                   ),
                 ),
-                _audioPlayer != null
+                _isPlaying
                     ? Flexible(
-                        //tutaj jak zacznie grac to sie powinno pokazac np na dole TO JEST W PLIKU MAIN_MULTIPLES.DART i dziala raczej
-                        child: PlayerWidget(audioPlayer: _audioPlayer),
+                        //za szybko pokazuje chyba
+                        child: PlayerWidget(
+                            audioPlayer: _audioPlayer), //send playList!
                         flex: 1,
                       )
                     : Flexible(child: Container(), flex: 0),
@@ -233,35 +247,6 @@ class _UserItemInfoState extends State<UserItemInfo> {
       },
     );
   }
-
-  // Future startMusic(Playlist playlist, int index) async {
-  //   print('this is name ${playlist.audios.elementAt(index).metas.title}');
-  //   await _assetsAudioPlayer.open(
-  //     // to w funkcje xD
-  //     playlist.audios.elementAt(index),
-  //     //problem that when i click it doesn know which one will be next i think
-  //     // before was _playlist - then click doesnt work it just goes by the list
-  //     showNotification: true, //when clicked next then index+1?
-  //     notificationSettings: NotificationSettings(
-  //       customNextAction: (player) async {
-  //         if (_index < _playlist.audios.length - 1) {
-  //           _index++;
-  //           print('this is NOT main $_index');
-  //         } else {
-  //           _index = 0;
-  //         }
-
-  //         // startMusic(_playlist, _index);
-  //         //player to jest tylko ten na tym indexie trza znalezc sposob zeby do nast isc
-  //         //tu tez jakis setState chyba
-  //         // player.open(_playlist.audios
-  //         //     .elementAt(index));
-  //       },
-  //     ),
-  //   ).catchError((error) {
-  //     return throw error;
-  //   });
-  // }
 
   void creatingPlaylist() {
     for (int i = 0; i < _tracklist.data.length; i++) {

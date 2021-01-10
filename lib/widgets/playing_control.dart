@@ -1,7 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
-import 'dart:math';
 
 class PlayingControl extends StatelessWidget {
   final bool isPlaying;

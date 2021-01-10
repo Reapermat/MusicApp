@@ -1,56 +1,45 @@
-import 'package:MusicApp/providers/models/tracklist.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 
-import 'package:assets_audio_player/assets_audio_player.dart';
 import '../providers/models/audio_player.dart';
 import '../widgets/error_dialog.dart';
-import '../screens/screen_arguments.dart';
 
 class GridtileUser extends StatefulWidget {
   Playlist playlist = Playlist();
 
-  AudioPlayer audioPlayer;
-
   int i;
 
-  Tracklist tracklist;
+  final Function(bool) onSongChange;
 
-  GridtileUser({this.playlist, this.audioPlayer, this.tracklist, this.i});
+  final Future Function(AudioPlayer) onAudioplayerChange;
+
+  GridtileUser(
+      {@required this.playlist,
+      @required this.i,
+      @required this.onSongChange,
+      @required this.onAudioplayerChange});
   @override
   _GridtileUserState createState() => _GridtileUserState();
 }
 
 class _GridtileUserState extends State<GridtileUser> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
+  AudioPlayer _audioPlayer;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect( 
-      //maybe use streams so it changes that thing at the bottom
+    return ClipRRect(
       borderRadius: BorderRadius.circular(7),
       child: GridTile(
         child: GestureDetector(
           onTap: () async {
-            print(
-                'this is gridTile ${widget.playlist.audios.elementAt(widget.i).metas.title}');
+            widget.onSongChange(true);
             try {
-              // setState(() { //set state doesnt change the state for the other screen
-                if (_assetsAudioPlayer.isPlaying.value) {
-                  _assetsAudioPlayer.stop();
-                }
-              // });
+              if (_assetsAudioPlayer.isPlaying.value) {
+                _assetsAudioPlayer.stop();
+              }
 
-              print('this is gridTile one ${widget.i}');
-              widget.audioPlayer = AudioPlayer(
-                  audio: widget.playlist.audios.elementAt(widget.i),
-                  title: widget.playlist.audios.elementAt(widget.i).metas.title,
-                  imageUrl: widget.playlist.audios
-                      .elementAt(widget.i)
-                      .metas
-                      .image
-                      .path);
-              await startMusic(widget.playlist, widget.i);
-              ScreenArguments(audioPlayer: widget.audioPlayer);
+              await startMusicOnClick();
             } catch (error) {
               await showDialog(
                 context: context,
@@ -59,16 +48,14 @@ class _GridtileUserState extends State<GridtileUser> {
             }
           },
           child: Image.network(
-            widget.tracklist.data.elementAt(widget.i).album.coverMedium,
+            widget.playlist.audios.elementAt(widget.i).metas.image.path,
             fit: BoxFit.cover,
           ),
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           title: Text(
-            widget.tracklist.data
-                .elementAt(widget.i)
-                .title, // spoko by bylo jakos caly teskt pokazac jak by byl za dlugi - taka animacje
+            widget.playlist.audios.elementAt(widget.i).metas.title,
             textAlign: TextAlign.center,
           ),
         ),
@@ -76,9 +63,38 @@ class _GridtileUserState extends State<GridtileUser> {
     );
   }
 
-  Future startMusic(Playlist playlist, int _index) async {
-    await _assetsAudioPlayer.open(playlist,
-        loopMode: LoopMode.playlist, showNotification: true);
-    await _assetsAudioPlayer.playlistPlayAtIndex(_index);
+  Future startMusicOnClick() async {
+    await _assetsAudioPlayer.open(widget.playlist,
+        loopMode: LoopMode.playlist,
+        showNotification: true,
+        notificationSettings: NotificationSettings(
+          stopEnabled: false,
+        ));
+
+    await _assetsAudioPlayer.playlistPlayAtIndex(widget.i).then((_) {
+      _audioPlayer = AudioPlayer(
+          audio: widget.playlist.audios.elementAt(widget.i),
+          title: widget.playlist.audios.elementAt(widget.i).metas.title,
+          imageUrl:
+              widget.playlist.audios.elementAt(widget.i).metas.image.path);
+
+      widget.onAudioplayerChange(_audioPlayer);
+    });
+
+    _assetsAudioPlayer.playlistAudioFinished.listen((stopped) async {
+      Future.delayed(Duration(seconds: 1)).then((_) {
+        if (_assetsAudioPlayer.current.value.audio.audio.path !=
+            _audioPlayer.audio.path) {
+          print('currently changed');
+          _audioPlayer = AudioPlayer(
+              audio: _assetsAudioPlayer.current.value.audio.audio,
+              title: _assetsAudioPlayer.current.value.audio.audio.metas.title,
+              imageUrl: _assetsAudioPlayer
+                  .current.value.audio.audio.metas.image.path);
+
+          widget.onAudioplayerChange(_audioPlayer);
+        }
+      });
+    });
   }
 }
