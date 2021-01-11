@@ -99,7 +99,20 @@ class _UserItemInfoState extends State<UserItemInfo> {
                     ),
                   ),
                 ),
-                Flexible(flex: 0, child: SearchBarMain()),
+                Flexible(
+                    flex: 0,
+                    child: SearchBarMain(
+                      audioPlayer: _audioPlayer,
+                      onSongChange: (bool val) {
+                        _isPlaying = val;
+                      },
+                      onAudioplayerChange: (AudioPlayer audio) {
+                        print('sent audio $audio');
+                        setState(() {
+                          _audioPlayer = audio;
+                        });
+                      },
+                    )),
                 Flexible(
                   flex: 4,
                   fit: FlexFit.loose,

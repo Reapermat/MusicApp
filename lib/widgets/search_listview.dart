@@ -50,7 +50,7 @@ class _SearchListViewState extends State<SearchListView> {
               audio: _audio,
               title: searchList.title,
               imageUrl:
-                  searchList.album.coverMedium); //musibyc taki sam jak tamten
+                  searchList.album.coverMedium);
 
           await _assetsAudioPlayer
               .open(_audio,
@@ -58,7 +58,7 @@ class _SearchListViewState extends State<SearchListView> {
                   notificationSettings: NotificationSettings(
                     stopEnabled: false,
                   ))
-              //when song ends then start playing that playlist?
+              //when song ends then start playing that playlist from main?!!!!
 
               .catchError((error) {
             return throw error;

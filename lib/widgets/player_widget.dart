@@ -23,8 +23,8 @@ class _PlayerWidgetState extends State<PlayerWidget> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, contraints) {
-        return StreamBuilder(
-            //Layout builder brooo like in the vid udemy
+        return StreamBuilder( 
+            //could implement swipe to dissapear
             stream: _assetsAudioPlayer.isPlaying,
             initialData: false,
             builder: (context, snapshotPlaying) {

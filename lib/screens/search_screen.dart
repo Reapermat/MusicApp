@@ -15,6 +15,7 @@ class SearchScreen extends StatefulWidget {
 
   // SearchScreen({this.search});
   // String search;
+  Playlist playlist;
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -32,15 +33,19 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _isPlaying = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     print('dependecies');
 
-    search = ModalRoute.of(context).settings.arguments as String;
+    ScreenArguments args = ModalRoute.of(context).settings.arguments;
+
+    if (args.search != null) {
+      search = args.search;
+    }
+    if (args.audioPlayer != null) {
+      _audioPlayer = args.audioPlayer;
+      _isPlaying = true;
+      print('args is playing');
+    }
 
     if (_isInit) {
       _searchFuture = _getSearch();
@@ -82,6 +87,13 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Page'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            print('pop');
+            Navigator.of(context).pop(_audioPlayer);
+          },
+        ),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
