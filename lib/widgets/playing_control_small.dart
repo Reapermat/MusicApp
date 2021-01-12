@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class PlayingControl extends StatelessWidget {
+class PlayingControlSmall extends StatelessWidget {
   final bool isPlaying;
   final Function() onPlay;
   final Function() onStop;
   final Function() onNext;
   final Function() onPrevious;
 
-  PlayingControl({
+  PlayingControlSmall({
     @required this.isPlaying,
     @required this.onPlay,
     this.onStop,

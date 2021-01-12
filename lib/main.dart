@@ -8,6 +8,7 @@ import 'screens/after_login.dart';
 import 'screens/login_screen.dart';
 import 'screens/screen_arguments.dart';
 import 'screens/search_screen.dart';
+import 'screens/current_song_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           AfterLogin.routeName: (ctx) => AfterLogin(),
           SearchScreen.routeName: (ctx) => SearchScreen(),
+          CurrentSongScreen.routeName: (ctx) => CurrentSongScreen(),
         },
       ),
     );

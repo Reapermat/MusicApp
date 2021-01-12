@@ -10,7 +10,7 @@ import '../providers/models/tracklist.dart';
 import '../providers/models/user.dart';
 import 'search_bar_main.dart';
 import 'error_dialog.dart';
-import 'player_widget.dart';
+import 'player_widget_small.dart';
 import './gridtile_user.dart';
 
 class UserItemInfo extends StatefulWidget {
@@ -162,7 +162,7 @@ class _UserItemInfoState extends State<UserItemInfo> {
                 ),
                 _isPlaying
                     ? Flexible(
-                        child: PlayerWidget(audioPlayer: _audioPlayer),
+                        child: PlayerWidgetSmall(audioPlayer: _audioPlayer),
                         flex: 1,
                       )
                     : Flexible(child: Container(), flex: 0),

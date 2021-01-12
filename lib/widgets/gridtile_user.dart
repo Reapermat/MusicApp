@@ -33,7 +33,6 @@ class _GridtileUserState extends State<GridtileUser> {
       child: GridTile(
         child: GestureDetector(
           onTap: () async {
-            widget.onSongChange(true);
             try {
               if (_assetsAudioPlayer.isPlaying.value) {
                 _assetsAudioPlayer.stop();
@@ -41,6 +40,7 @@ class _GridtileUserState extends State<GridtileUser> {
 
               await startMusicOnClick();
             } catch (error) {
+              widget.onSongChange(false);
               await showDialog(
                 context: context,
                 builder: (ctx) => ErrorDialog('Try again later'),
@@ -78,6 +78,7 @@ class _GridtileUserState extends State<GridtileUser> {
           imageUrl:
               widget.playlist.audios.elementAt(widget.i).metas.image.path);
 
+      widget.onSongChange(true);
       widget.onAudioplayerChange(_audioPlayer);
     });
 

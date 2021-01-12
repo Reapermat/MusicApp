@@ -66,6 +66,7 @@ class Authentication extends ChangeNotifier {
 
   Future<User> getUser(String token) async {
     final url = 'https://api.deezer.com/user/me?access_token=$token';
+
     print(url);
     try {
       final response = await http.get(url);
@@ -89,6 +90,17 @@ class Authentication extends ChangeNotifier {
       return _tracklistList;
     } catch (error) {
       return throw error;
+    }
+  }
+
+  Future<void> getPlaylist() async{
+    final url = 'https://api.deezer.com/user/playlist?access_token=$_accessToken';
+
+    try{
+      final response = await http.get(url);
+      print('playlist ${response.body}'); 
+    }catch(error){
+      throw error;
     }
   }
 }

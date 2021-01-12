@@ -50,7 +50,7 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
           ),
           Expanded(
             child: NeumorphicSlider(
-              min: 0,
+              min: 0.0,
               max: widget.duration.inMilliseconds.toDouble(),
               value: percent * widget.duration.inMilliseconds.toDouble(),
               style:
@@ -86,7 +86,8 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
 
 String durationToString(Duration duration) {
   String twoDigits(int n) {
-    if (n >= 10) return "$n";
+    print('this');
+    if (n >= 10.0) return "$n";
     return "0$n";
   }
 
@@ -96,3 +97,5 @@ String durationToString(Duration duration) {
       twoDigits(duration.inSeconds.remainder(Duration.secondsPerMinute));
   return "$twoDigitMinutes:$twoDigitSeconds";
 }
+
+

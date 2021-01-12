@@ -8,14 +8,14 @@ import '../providers/search_content.dart';
 import '../widgets/error_dialog.dart';
 import '../providers/models/audio_player.dart';
 import '../widgets/search_listview.dart';
-import '../widgets/player_widget.dart';
+import '../widgets/player_widget_small.dart';
 
 class SearchScreen extends StatefulWidget {
   static final routeName = 'search-screen';
 
   // SearchScreen({this.search});
   // String search;
-  Playlist playlist;
+  // Playlist playlist;
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -169,7 +169,7 @@ class _SearchScreenState extends State<SearchScreen> {
             //need to put player below
             _isPlaying
                 ? Flexible(
-                    child: PlayerWidget(audioPlayer: _audioPlayer),
+                    child: PlayerWidgetSmall(audioPlayer: _audioPlayer),
                     flex: 1,
                   )
                 : Flexible(child: Container(), flex: 0),
