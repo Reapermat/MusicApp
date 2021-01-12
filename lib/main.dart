@@ -9,6 +9,7 @@ import 'screens/login_screen.dart';
 import 'screens/screen_arguments.dart';
 import 'screens/search_screen.dart';
 import 'screens/current_song_screen.dart';
+import 'screens/playlist_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
           AfterLogin.routeName: (ctx) => AfterLogin(),
           SearchScreen.routeName: (ctx) => SearchScreen(),
           CurrentSongScreen.routeName: (ctx) => CurrentSongScreen(),
+          PlaylistScreen.routeName: (ctx) => PlaylistScreen(),
         },
       ),
     );

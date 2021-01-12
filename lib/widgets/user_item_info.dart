@@ -12,6 +12,7 @@ import 'search_bar_main.dart';
 import 'error_dialog.dart';
 import 'player_widget_small.dart';
 import './gridtile_user.dart';
+import '../screens/playlist_screen.dart';
 
 class UserItemInfo extends StatefulWidget {
   @override
@@ -101,18 +102,23 @@ class _UserItemInfoState extends State<UserItemInfo> {
                 ),
                 Flexible(
                     flex: 0,
-                    child: SearchBarMain(
-                      audioPlayer: _audioPlayer,
-                      onSongChange: (bool val) {
-                        _isPlaying = val;
-                      },
-                      onAudioplayerChange: (AudioPlayer audio) {
-                        print('sent audio $audio');
-                        setState(() {
-                          _audioPlayer = audio;
-                        });
-                      },
-                    )),
+                    // child: SearchBarMain(
+                    //   audioPlayer: _audioPlayer,
+                    //   onSongChange: (bool val) {
+                    //     _isPlaying = val;
+                    //   },
+                    //   onAudioplayerChange: (AudioPlayer audio) {
+                    //     print('sent audio $audio');
+                    //     setState(() {
+                    //       _audioPlayer = audio;
+                    //     });
+                    //   },
+                    // ),
+                    child: FlatButton(
+                        child: Text('Okay'),
+                        onPressed: () async {
+                          Navigator.of(context).pushNamed(PlaylistScreen.routeName);
+                        })),
                 Flexible(
                   flex: 4,
                   fit: FlexFit.loose,

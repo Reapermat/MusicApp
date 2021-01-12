@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final String appId = '448382';
     final String redirectUri = 'https://www.google.com/oauth2redirect';
     final String loginUrl =
-        "https://connect.deezer.com/oauth/auth.php?app_id=$appId&redirect_uri=$redirectUri&perms=basic_access,email";
+        "https://connect.deezer.com/oauth/auth.php?app_id=$appId&redirect_uri=$redirectUri&perms=basic_access,email,manage_library,delete_library,offline_access";
 
     return new WebviewScaffold(
       url: loginUrl,
