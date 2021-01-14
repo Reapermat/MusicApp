@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
@@ -9,11 +10,18 @@ import '../providers/models/audio_player.dart';
 import 'position_seek_widget.dart';
 import 'playing_control_big.dart';
 import '../widgets/error_dialog.dart';
+import '../providers/authentication.dart';
+import '../providers/models/audio_player.dart';
 
 class PlayerWidgetBig extends StatefulWidget {
-  final AudioPlayer audioPlayer;
+  // final AudioPlayer audioPlayer;
 
-  PlayerWidgetBig({this.audioPlayer});
+  // PlayerWidgetBig({this.audioPlayer});
+
+  final Future Function(AudioPlayer) onAudioplayerChange;
+
+  PlayerWidgetBig({this.onAudioplayerChange});
+
   @override
   _PlayerWidgetBigState createState() => _PlayerWidgetBigState();
 }
@@ -21,15 +29,121 @@ class PlayerWidgetBig extends StatefulWidget {
 class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   bool _getError = false;
+  bool _isFavorite = false;
+  Map<String, bool> favMap = {'isFav' : false};
+
+  Future getFavorite;
+  var _isInit = true;
+  AudioPlayer _audioPlayer;
+
+  //didDependecies change check current song if it is playlist then return bool
+
+  @override
+  void initState() {
+    // _isFavorite = widget.audioPlayer.isFavorite;
+    // print('isFavorite value $_isFavorite');
+
+    super.initState();
+    
+    // setState(() {
+    //   _getFavorite().then((value) {
+    //     // print('favorite is $value');
+    //     setState(() {
+    //       _isFavorite = value;
+    //       print('favorite is $_isFavorite');
+    //     });
+    //   });
+    // });
+  }
+
+  Future<bool> _getFavorite() async {
+    bool favorite =
+        false; //spierdolone to jest //trzeba porownac po porstu czy ten id jest w liscie czy nie jak jest to value smienic i tyle!!
+    return await Provider.of<Authentication>(context, listen: false)
+        .getPlaylist()
+        .then((songs) {
+      for (int i = 0; i < songs.data.length; i++) {
+        if (_assetsAudioPlayer.current.value.audio.audio.metas.id ==
+            songs.data.elementAt(i).id.toString()) {
+          print('nr of stuff $i');
+          // setState(() {
+          favorite = true;
+          // favMap.update('isFav', (value) => true);
+          
+          // _assetsAudioPlayer.current.value.audio.audio.metas.extra.addAll(favMap);
+          return favorite;
+          // });
+          // break;
+        }
+      }
+      // favMap.update('isFav', (value) => false);
+          
+      //     _assetsAudioPlayer.current.value.audio.audio.metas.extra.addAll(favMap);
+      return favorite;
+    });
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   Provider.of<Authentication>(context, listen: false)
+  //       .checkSong(_assetsAudioPlayer)
+  //       .then((value) {
+  //     print('method called');
+  //     setState(() {
+  //       _isFavorite = value;
+  //       print(_isFavorite);
+  //     });
+  //   });
+
+  //   super.didChangeDependencies();
+  // }
+
   @override
   Widget build(BuildContext context) {
-    //hero to sie ta animacja nazywa!
+    var _provider = Provider.of<Authentication>(context, listen: false);
+    // Provider.of<Authentication>(context)
+    //     .checkSong(_assetsAudioPlayer)
+    //     .then((value) {
+    //   print('method called');
+    //   setState(() {
+    //     _isFavorite = value;
+    //   });
+    // });
+    String _songId;
+
+    // _assetsAudioPlayer.current.listen((event) async {
+    //   await _getFavorite().then(() {
+    //     setState(() {});
+    //   });
+
+    //   _isFavorite = false;
+    // });
+
     return StreamBuilder(
         //could implement swipe to dissapear
         stream: _assetsAudioPlayer.isPlaying,
         initialData: false,
+
         builder: (context, snapshotPlaying) {
           final isPlaying = snapshotPlaying.data;
+
+          print('snapshot ${snapshotPlaying.hasData}');
+
+          // if (snapshotPlaying.hasData) {
+          //   _getFavorite().then((value) {
+          //     // print('favorite is $value');
+          //     // setState(() {
+          //     _isFavorite = value;
+          //     print('favorite is $_isFavorite');
+          //   });
+          //   // });
+          //   // });
+          // }
+          // print('snapshot data ${isPlaying.toString()}');
+          if (!snapshotPlaying.hasData) {
+            return CircularProgressIndicator();
+          }
+
           return Column(
             //need on error or smth
             children: <Widget>[
@@ -66,21 +180,55 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                       ),
                     ),
                     Expanded(
+                      flex: 1,
+                      child: IconButton(
+                          //need to change this when song is favorite
+                          icon: _isFavorite
+                              ? Icon(Icons.favorite)
+                              : Icon(Icons.favorite_border),
+                          onPressed: () {
+                            _songId = _assetsAudioPlayer
+                                .current.value.audio.audio.metas.id;
+
+                            print(_songId);
+                            _provider.addPlaylistSong(_songId).then((_) async {
+                              // _getFavorite();
+
+                              await showDialog(
+                                  context: context,
+                                  builder: (ctx) => (AlertDialog(
+                                          title:
+                                              Text('Song successfully added!'),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                                child: Text('Okay'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                })
+                                          ]))).then((_) {});
+                              // setState(() {});
+                              // _isFavorite = false; //not sure about this
+                            }).catchError((onError) async {
+                              await showDialog(
+                                  context: context,
+                                  builder: (ctx) => ErrorDialog(
+                                      'Song already exists in Favorites'));
+                            });
+                            initState();
+                          }),
+                    ),
+                    Expanded(
                       flex: 2,
                       child: PlayerBuilder.isPlaying(
                         player: _assetsAudioPlayer,
                         builder: (context, isPlaying) {
-                          print(
-                              'big player assetPlayer ${_assetsAudioPlayer.current.value.audio.audio.metas.title}');
-                          print(
-                              'big player widget ${widget.audioPlayer.title}');
                           // _assetsAudioPlayer.onErrorDo = (_) {
-                          //   print('smth fucked');
                           //   return ErrorDialog('please try again later');
                           // };
                           return PlayingControlBig(
                             isPlaying: isPlaying,
                             onPlay: () async {
+                              // didChangeDependencies();
                               // if (_assetsAudioPlayer.current.value == null) {
                               //   try {
                               //     _assetsAudioPlayer
@@ -95,7 +243,9 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                               //   }
                               // } else {
                               try {
-                                _getError = false;
+                                setState(() {
+                                  _getError = false;
+                                });
                                 await _assetsAudioPlayer
                                     .playOrPause()
                                     .catchError((onError) {
@@ -114,13 +264,15 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                               // }
                             },
                             onNext: () async {
+                              // didChangeDependencies();
                               // setState(() {
                               try {
-                                _getError = false;
+                                setState(() {
+                                  _getError = false;
+                                });
                                 await _assetsAudioPlayer
                                     .next()
                                     .catchError((onError) {
-                                  print('onError');
                                   throw onError;
                                 });
                               } catch (error) {
@@ -136,9 +288,12 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                               // });
                             },
                             onPrevious: () async {
+                              // didChangeDependencies();
                               // setState(() {
                               try {
-                                _getError = false;
+                                setState(() {
+                                  _getError = false;
+                                });
                                 await _assetsAudioPlayer
                                     .previous()
                                     .catchError((onError) {
@@ -154,6 +309,14 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                               }
 
                               // });
+                              _audioPlayer = AudioPlayer(
+                                  audio: _assetsAudioPlayer
+                                      .current.value.audio.audio,
+                                  title: _assetsAudioPlayer
+                                      .current.value.audio.audio.metas.title,
+                                  imageUrl: _assetsAudioPlayer.current.value
+                                      .audio.audio.metas.image.path);
+                              widget.onAudioplayerChange(_audioPlayer);
                             },
                           );
                         },
@@ -180,7 +343,7 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                                   //when there is an error it doesn't show and for a sec u see red stuff
                                   //maybe its the neumorphic problem
                                   seekTo: (to) async {
-                                      _assetsAudioPlayer.seek(to);
+                                    _assetsAudioPlayer.seek(to);
                                   },
                                   duration: infos.duration,
                                   currentPosition: infos.currentPosition,
@@ -201,8 +364,8 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
           );
         });
   }
-Future wait(int i) async {
-  await Future.delayed(Duration(milliseconds: i));
-}
-  
+
+  Future wait(int i) async {
+    await Future.delayed(Duration(milliseconds: i));
+  }
 }

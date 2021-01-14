@@ -14,30 +14,47 @@ class CurrentSongScreen extends StatefulWidget {
 }
 
 class _CurrentSongScreenState extends State<CurrentSongScreen> {
-  AudioPlayer _audioPlayer;
+  // AudioPlayer _audioPlayer;
   @override
   void didChangeDependencies() {
     ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    if (args.audioPlayer != null) {
-      _audioPlayer = args.audioPlayer;
-      // _isPlaying = true;
-      print('args is playing');
-    }
+    // if (args.audioPlayer != null) {
+    //   _audioPlayer = args.audioPlayer;
+
+    // }
 
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Front Page'),
+    AudioPlayer _audioPlayer;
+    return WillPopScope(
+      onWillPop: () {
+        print('pop');
+        Navigator.of(context).pop(_audioPlayer);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Front Page'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              print('pop');
+              Navigator.of(context).pop(_audioPlayer);
+            },
+          ),
+        ),
+        body: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.all(10),
+            child: PlayerWidgetBig(
+              onAudioplayerChange: (AudioPlayer audio) {
+                _audioPlayer = audio;
+              },
+            )),
       ),
-      body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(10),
-          child: PlayerWidgetBig(audioPlayer: _audioPlayer)),
     );
   }
 }

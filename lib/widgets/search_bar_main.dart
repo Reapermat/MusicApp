@@ -42,7 +42,7 @@ class _SearchBarMainState extends State<SearchBarMain> {
     // using stream/callback?
     // }
     // if (widget.audioPlayer == null) {
-    //   print('should piss off');
+
     //   return;
     // }
     if (result != null) {

@@ -8,25 +8,29 @@ import 'playing_control_small.dart';
 import '../screens/current_song_screen.dart';
 
 class PlayerWidgetSmall extends StatefulWidget {
-  final AudioPlayer audioPlayer;
+  AudioPlayer audioPlayer;
 
-  PlayerWidgetSmall({this.audioPlayer});
+  final Future Function(AudioPlayer) onAudioplayerChange;
+
+  PlayerWidgetSmall({this.audioPlayer, this.onAudioplayerChange});
   // final Playlist playlist;
 
   // PlayerWidget({this.playlist});
+  //Future needed
+
   @override
   _PlayerWidgetSmallState createState() => _PlayerWidgetSmallState();
 }
 
 class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
+  AudioPlayer _poppedAudioPlayer;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, contraints) {
         return StreamBuilder(
-            //could implement swipe to dissapear
             stream: _assetsAudioPlayer.isPlaying,
             initialData: false,
             builder: (context, snapshotPlaying) {
@@ -45,11 +49,57 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                         Expanded(
                           flex: 3,
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  CurrentSongScreen.routeName,
-                                  arguments: ScreenArguments(
-                                      audioPlayer: widget.audioPlayer));
+                            onTap: () async {
+                              //await zrobic
+                              final result = await Navigator.of(context)
+                                  .pushNamed(CurrentSongScreen.routeName);
+                                  print(result);
+                              if (result != null) {
+                                _poppedAudioPlayer = result;
+                                if (widget.audioPlayer != null) {
+                                  print(
+                                      'widget is ${widget.audioPlayer.title}');
+                                  if (_poppedAudioPlayer.audio.path !=
+                                      widget.audioPlayer.audio.path) {
+                                    widget.audioPlayer = _poppedAudioPlayer;
+                                    widget.onAudioplayerChange(
+                                        widget.audioPlayer);
+                                  }
+                                } else {
+                                  widget
+                                      .onAudioplayerChange(_poppedAudioPlayer);
+                                  print('should call?');
+                                }
+                              }
+                              // Navigator.of(context).pushNamed(
+                              //     CurrentSongScreen.routeName);
+                              // arguments: ScreenArguments(
+                              //     audioPlayer: widget.audioPlayer));
+                              //                               final result = await Navigator.of(context).pushNamed(
+                              //   SearchScreen.routeName,
+                              //   arguments:
+                              //       ScreenArguments(search: input, audioPlayer: widget.audioPlayer),
+                              //   // maybe its not sending it correctly
+                              // );
+
+                              // if (result != null) {
+                              //   _poppedAudioPlayer = result;
+                              //   if (widget.audioPlayer != null) {
+                              //     print('widget is ${widget.audioPlayer.title}');
+                              //     if (_poppedAudioPlayer.audio.path != widget.audioPlayer.audio.path) {
+                              //       widget.audioPlayer = _poppedAudioPlayer;
+                              //       widget.onAudioplayerChange(widget.audioPlayer);
+                              //       widget.onSongChange(true);
+                              //       //callback
+                              //     }
+                              //   } else {
+                              //     //callback
+                              //     //_poppedAudioPlayer
+                              //     widget.onAudioplayerChange(_poppedAudioPlayer);
+                              //     widget.onSongChange(true);
+                              //     print('should call?');
+                              //   }
+                              // }
                             },
                             child: Row(
                               children: <Widget>[
@@ -64,6 +114,7 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                                     ),
                                     child: Image.network(
                                       widget.audioPlayer.imageUrl,
+                                      // _assetsAudioPlayer.current.value.audio.audio.metas.image.path,
                                       // widget.playlist.audios.elementAt(index).
                                       height: contraints.maxHeight * 0.585,
                                       // width: 25,
@@ -76,6 +127,7 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(this.widget.audioPlayer.title),
+                                    // child: Text(_assetsAudioPlayer.current.value.audio.audio.metas.title),
                                   ),
                                 ),
                                 Expanded(
@@ -100,21 +152,6 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                         ),
                       ],
                     ),
-                    // StreamBuilder(
-                    //     stream: _assetsAudioPlayer.realtimePlayingInfos,
-                    //     builder: (context, snapshot) {
-                    //       if (!snapshot.hasData) {
-                    //         return SizedBox();
-                    //       }
-                    //       RealtimePlayingInfos infos = snapshot.data;
-                    //       return PositionSeekWidget(
-                    //         seekTo: (to) {
-                    //           _assetsAudioPlayer.seek(to);
-                    //         },
-                    //         duration: infos.duration,
-                    //         currentPosition: infos.currentPosition,
-                    //       );
-                    //     }),
                   ],
                 ),
               );

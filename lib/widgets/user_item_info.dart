@@ -28,6 +28,7 @@ class _UserItemInfoState extends State<UserItemInfo> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   bool _isPlaying = false;
   bool _isInit = true;
+  AudioPlayer _poppedAudioPlayer;
 
   @override
   void initState() {
@@ -77,6 +78,21 @@ class _UserItemInfoState extends State<UserItemInfo> {
               creatingPlaylist();
               _isInit = false;
             }
+            // if (_assetsAudioPlayer.current.value != null) {
+            //   if (_assetsAudioPlayer.current.value.audio.audio.path !=
+            //       _audioPlayer.audio.path) {
+            //     print('in assets different');
+            //     setState(() {
+            //       _audioPlayer = AudioPlayer(
+            //           audio: _assetsAudioPlayer.current.value.audio.audio,
+            //           title: _assetsAudioPlayer
+            //               .current.value.audio.audio.metas.title,
+            //           imageUrl: _assetsAudioPlayer
+            //               .current.value.audio.audio.metas.image.path);
+            //     });
+            //   }
+            // }
+
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -101,24 +117,36 @@ class _UserItemInfoState extends State<UserItemInfo> {
                   ),
                 ),
                 Flexible(
-                    flex: 0,
-                    // child: SearchBarMain(
-                    //   audioPlayer: _audioPlayer,
-                    //   onSongChange: (bool val) {
-                    //     _isPlaying = val;
-                    //   },
-                    //   onAudioplayerChange: (AudioPlayer audio) {
-                    //     print('sent audio $audio');
-                    //     setState(() {
-                    //       _audioPlayer = audio;
-                    //     });
-                    //   },
-                    // ),
-                    child: FlatButton(
-                        child: Text('Okay'),
-                        onPressed: () async {
-                          Navigator.of(context).pushNamed(PlaylistScreen.routeName);
-                        })),
+                  // flex: 0,
+                  // child: SearchBarMain(
+                  //   audioPlayer: _audioPlayer,
+                  //   onSongChange: (bool val) {
+                  //     _isPlaying = val;
+                  //     print(_isPlaying);
+                  //   },
+                  //   onAudioplayerChange: (AudioPlayer audio) {
+                  //     print('sent audio $audio');
+                  //     setState(() {
+                  //       _audioPlayer = audio;
+                  //     });
+                  //   },
+                  // ),
+                  child: FlatButton(
+                      child: Text('Playlist'),
+                      onPressed: () async {
+                        final result = await Navigator.of(context).pushNamed(
+                            PlaylistScreen.routeName,
+                            arguments:
+                                ScreenArguments(audioPlayer: _audioPlayer));
+                        print(result);
+                        if (result != null) {
+                          setState(() {
+                            _audioPlayer = result;
+                            _isPlaying = true;
+                          });
+                        }
+                      }),
+                ),
                 Flexible(
                   flex: 4,
                   fit: FlexFit.loose,
@@ -168,7 +196,14 @@ class _UserItemInfoState extends State<UserItemInfo> {
                 ),
                 _isPlaying
                     ? Flexible(
-                        child: PlayerWidgetSmall(audioPlayer: _audioPlayer),
+                        child: PlayerWidgetSmall(
+                          audioPlayer: _audioPlayer,
+                          onAudioplayerChange: (AudioPlayer audio) {
+                            setState(() {
+                              _audioPlayer = audio;
+                            });
+                          },
+                        ),
                         flex: 1,
                       )
                     : Flexible(child: Container(), flex: 0),
@@ -188,6 +223,7 @@ class _UserItemInfoState extends State<UserItemInfo> {
           Audio.network(
             '${tracklist.preview}',
             metas: Metas(
+              id: tracklist.id.toString(),
               title: tracklist.title,
               artist: tracklist.artist.name,
               album: tracklist.album.title,

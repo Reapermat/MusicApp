@@ -1,9 +1,11 @@
 import 'package:MusicApp/providers/models/audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/models/search.dart';
 import './error_dialog.dart';
+import '../providers/authentication.dart';
 
 class SearchListView extends StatefulWidget {
   Search searchElem;
@@ -24,6 +26,7 @@ class SearchListView extends StatefulWidget {
 
 class _SearchListViewState extends State<SearchListView> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
+  var _isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +43,17 @@ class _SearchListViewState extends State<SearchListView> {
           _audio = Audio.network(
             '${searchList.preview}',
             metas: Metas(
+              id: searchList.id.toString(),
               title: searchList.title,
               artist: searchList.artist.name,
               album: searchList.album.title,
               image: MetasImage.network(searchList.album.coverMedium),
             ),
           );
-          _audioPlayer = AudioPlayer(
-              audio: _audio,
-              title: searchList.title,
-              imageUrl:
-                  searchList.album.coverMedium);
+          // _audioPlayer = AudioPlayer(
+          //     audio: _audio,
+          //     title: searchList.title,
+          //     imageUrl: searchList.album.coverMedium);
 
           await _assetsAudioPlayer
               .open(_audio,
@@ -58,19 +61,29 @@ class _SearchListViewState extends State<SearchListView> {
                   notificationSettings: NotificationSettings(
                     stopEnabled: false,
                   ))
+              .then((_) async {
+            // _getFavorite().then(() {
+              _audioPlayer = AudioPlayer(
+                  audio: _audio,
+                  title: searchList.title,
+                  imageUrl: searchList.album.coverMedium,
+                  isFavorite: _isFavorite);
+              widget.onSongChange(true);
+              widget.onAudioplayerChange(_audioPlayer);
+            // });
+          })
               //when song ends then start playing that playlist from main?!!!!
 
               .catchError((error) {
             return throw error;
           });
         } catch (error) {
+          widget.onSongChange(false);
           await showDialog(
             context: context,
             builder: (ctx) => ErrorDialog('Try again later'),
           );
         }
-        widget.onSongChange(true);
-        widget.onAudioplayerChange(_audioPlayer);
       },
       child: ListTile(
         leading: CircleAvatar(
@@ -80,4 +93,24 @@ class _SearchListViewState extends State<SearchListView> {
       ),
     );
   }
+
+  // _getFavorite() async {
+  //   //spierdolone to jest //trzeba porownac po porstu czy ten id jest w liscie czy nie jak jest to value smienic i tyle!!
+  //   Provider.of<Authentication>(context, listen: false)
+  //       .getPlaylist()
+  //       .then((songs) {
+  //     _isFavorite = false;
+  //     for (int i = 0; i < songs.data.length; i++) {
+  //       if (_assetsAudioPlayer.current.value.audio.audio.metas.id ==
+  //           songs.data.elementAt(i).id.toString()) {
+  //         print(i);
+  //         // setState(() {
+  //         _isFavorite = true;
+  //         // });
+  //         // break;
+  //       }
+  //     }
+  //   });
+  //   return _isFavorite;
+  // }
 }

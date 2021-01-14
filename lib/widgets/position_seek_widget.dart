@@ -86,7 +86,6 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
 
 String durationToString(Duration duration) {
   String twoDigits(int n) {
-    print('this');
     if (n >= 10.0) return "$n";
     return "0$n";
   }

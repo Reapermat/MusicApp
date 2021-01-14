@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assets_audio_player/assets_audio_player.dart' show AssetsAudioPlayer;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2_client/access_token_response.dart';
@@ -93,6 +94,7 @@ class Authentication extends ChangeNotifier {
       final response = await http.get(url);
       _tracklistList = tracklistFromJson(response.body);
       print(response.body);
+      print('first song id ${_tracklistList.data.first.id}');
       return _tracklistList;
     } catch (error) {
       return throw error;
@@ -118,6 +120,7 @@ class Authentication extends ChangeNotifier {
   }
 
   Future<PlaylistSongs> getPlaylistSongs(String playlistTracklist) async {
+    //notifyListeners
     final url = playlistTracklist;
     try {
       final response = await http.get(url);
@@ -131,19 +134,59 @@ class Authentication extends ChangeNotifier {
     }
   }
 
-  Future<void> addPlaylistSong(String songId) async { // working, just need to pass song id to add
-    // String songId = '3135556';
+//fix this thing
+  // Future<bool> checkSong(AssetsAudioPlayer assetsAudioPlayer) async {
+  //   await getPlaylist().then((value) {
+  //     for (int i = 0; i < value.total; i++) {
+  //       if (value.data.elementAt(i).id.toString() == assetsAudioPlayer.id) {
+  //         print('same song!');
+  //         notifyListeners();
+  //         return true;
+  //       }
+  //     }
+  //   }).catchError((onError) {
+  //     throw onError;
+  //   });
+  //   return false;
+  // }
+
+  Future<void> addPlaylistSong(String songId) async {
+    if (_playlistId == null) {
+      await getPlaylist();
+    }
     final url =
         'https://api.deezer.com/playlist/$_playlistId/tracks?access_token=$_accessToken&songs=$songId';
     print(url);
     try {
       await http.post(url).then((response) {
         print(response.body);
+        if (response.body != 'true') {
+          throw Error();
+        }
       });
     } catch (error) {
       throw error;
     }
   }
+
+  Future<PlaylistSongs> deleteSong(String songId) async {
+    if (_playlistId == null) {
+      await getPlaylist();
+    }
+    final url =
+        'https://api.deezer.com/playlist/$_playlistId/tracks?access_token=$_accessToken&songs=$songId';
+    print(url);
+    try {
+      await http.delete(url).then((response) async {
+        print(response.body);
+        await getPlaylist();
+      });
+      return _playlistSongs;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Future<void> addPlaylist(String playlistName) async {
   //   final url =
   //       'https://api.deezer.com/user/${_userId}/playlists?access_token=${_accessToken}?title=${playlistName}';
