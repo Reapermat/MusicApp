@@ -6,7 +6,8 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/authentication.dart';
-import 'after_login.dart';
+import 'main_screen.dart';
+import 'onboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login-page';
@@ -58,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
         flutterWebviewPlugin.close().then((_) {
           Future.delayed(Duration(seconds: 2)).then((_) {
             Navigator.of(context)
-                .pushNamed('/', arguments: ScreenArguments(error: true));
+                .pushNamed(OnBoardScreen.routeName, arguments: ScreenArguments(error: true));
             print('this is opening?');
           });
         });
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Provider.of<Authentication>(context, listen: false).setCode(code);
             // Tutaj juz mozna sie wyjebac gdzies np
             Navigator.of(context).pushNamedAndRemoveUntil(
-                AfterLogin.routeName, (Route<dynamic> route) => false);
+                MainScreen.routeName, (Route<dynamic> route) => false);
             flutterWebviewPlugin.close();
           }
         });

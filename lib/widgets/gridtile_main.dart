@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/models/audio_player.dart';
-import '../widgets/error_dialog.dart';
+import 'error_dialog.dart';
 import '../providers/authentication.dart';
 
-class GridtileUser extends StatefulWidget {
+class GridtileMain extends StatefulWidget {
   Playlist playlist = Playlist();
 
   int i;
@@ -15,16 +15,16 @@ class GridtileUser extends StatefulWidget {
 
   final Future Function(AudioPlayer) onAudioplayerChange;
 
-  GridtileUser(
+  GridtileMain(
       {@required this.playlist,
       @required this.i,
       @required this.onSongChange,
       @required this.onAudioplayerChange});
   @override
-  _GridtileUserState createState() => _GridtileUserState();
+  _GridtileMainState createState() => _GridtileMainState();
 }
 
-class _GridtileUserState extends State<GridtileUser> {
+class _GridtileMainState extends State<GridtileMain> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   AudioPlayer _audioPlayer;
   var _isFavorite = false;
@@ -32,7 +32,7 @@ class _GridtileUserState extends State<GridtileUser> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(7),
+      borderRadius: BorderRadius.circular(15),
       child: GridTile(
         child: GestureDetector(
           onTap: () async {

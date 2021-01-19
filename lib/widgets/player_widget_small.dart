@@ -29,21 +29,25 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (ctx, contraints) {
+      builder: (ctx, constraints) {
+        
+        print('player widget height ${constraints.biggest.height}');
+        print('player widget width ${constraints.biggest.width}');
         return StreamBuilder(
             stream: _assetsAudioPlayer.isPlaying,
             initialData: false,
             builder: (context, snapshotPlaying) {
               final isPlaying = snapshotPlaying.data;
-              return Neumorphic(
-                margin: EdgeInsets.all(4),
-                style: NeumorphicStyle(
-                  boxShape:
-                      NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
-                ),
+              return Container(
+                // margin: EdgeInsets.all(4),
+                // style: NeumorphicStyle(
+                //   boxShape:
+                //       NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
+                // ),
                 padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: <Widget>[
+                child: 
+                // Column(
+                //   children: <Widget>[
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -68,7 +72,6 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                                 } else {
                                   widget
                                       .onAudioplayerChange(_poppedAudioPlayer);
-                                  print('should call?');
                                 }
                               }
                               // Navigator.of(context).pushNamed(
@@ -105,18 +108,13 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.all(4.0),
-                                  child: Neumorphic(
-                                    style: NeumorphicStyle(
-                                      boxShape: NeumorphicBoxShape.circle(),
-                                      depth: 8,
-                                      surfaceIntensity: 1,
-                                      shape: NeumorphicShape.concave,
-                                    ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
                                     child: Image.network(
                                       widget.audioPlayer.imageUrl,
                                       // _assetsAudioPlayer.current.value.audio.audio.metas.image.path,
                                       // widget.playlist.audios.elementAt(index).
-                                      height: contraints.maxHeight * 0.585,
+                                      height: constraints.maxHeight * 0.585,
                                       // width: 25,
                                       fit: BoxFit.cover,
                                     ),
@@ -125,8 +123,8 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                                 Expanded(
                                   flex: 1,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(this.widget.audioPlayer.title),
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(this.widget.audioPlayer.title, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),),
                                     // child: Text(_assetsAudioPlayer.current.value.audio.audio.metas.title),
                                   ),
                                 ),
@@ -152,8 +150,8 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
                         ),
                       ],
                     ),
-                  ],
-                ),
+                //   ],
+                // ),
               );
             });
       },
