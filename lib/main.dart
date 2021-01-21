@@ -9,32 +9,46 @@ import 'screens/login_screen.dart';
 import 'screens/screen_arguments.dart';
 import 'screens/search_screen.dart';
 import 'screens/current_song_screen.dart';
-import 'screens/playlist_screen.dart';
+import 'screens/favorite_screen.dart';
 import 'screens/onboard_screen.dart';
+import 'screens/settings_screen.dart';
 import './screens/loading_screen.dart';
 import './themes/theme_notifier.dart';
 import './themes/theme_data.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (ctx) => Authentication(),
+      ),
+      ChangeNotifierProvider(
+        create: (ctx) => SearchContent(),
+      ),
+      ChangeNotifierProvider(create: (ctx) => ThemeNotifier(blueTheme))
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (ctx) => Authentication(),
-        ),
-        ChangeNotifierProvider(
-          create: (ctx) => SearchContent(),
-        ),
-        ChangeNotifierProvider(create: (ctx) => ThemeNotifier(blueTheme))
-      ],
-      child: MaterialApp(
+    // return MultiProvider(
+    //   providers: [
+    //     ChangeNotifierProvider(
+    //       create: (ctx) => Authentication(),
+    //     ),
+    //     ChangeNotifierProvider(
+    //       create: (ctx) => SearchContent(),
+    //     ),
+    //     ChangeNotifierProvider(create: (ctx) => ThemeNotifier(blueTheme))
+    //   ],
+    //   child: 
+    final themeProvider = Provider.of<ThemeNotifier>(context);
+      return MaterialApp(
         title: 'Moosic',
-        theme: blueTheme,
+        theme: themeProvider.getTheme(),
         home: MyHomePage(title: 'Home Page'),
         initialRoute: '/',
         routes: {
@@ -42,10 +56,11 @@ class MyApp extends StatelessWidget {
           MainScreen.routeName: (ctx) => MainScreen(),
           SearchScreen.routeName: (ctx) => SearchScreen(),
           CurrentSongScreen.routeName: (ctx) => CurrentSongScreen(),
-          PlaylistScreen.routeName: (ctx) => PlaylistScreen(),
+          FavoriteScreen.routeName: (ctx) => FavoriteScreen(),
           OnBoardScreen.routeName: (ctx) => OnBoardScreen(),
+          SettingsScreen.routeName: (ctx) => SettingsScreen(),
         },
-      ),
+      // ),
     );
   }
 }
@@ -94,12 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
       //                   });
       //                 })
       //           ]) :
-          body:  Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: LoadingScreen(),
-              // child: OnBoardScreen(),
-            ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: LoadingScreen(),
+        // child: OnBoardScreen(),
+      ),
     );
 
     // return Scaffold(  //this will be for the last page

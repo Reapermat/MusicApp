@@ -49,18 +49,21 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
     var provider = Provider.of<Authentication>(context, listen: false);
 
     return ListTile(
+      contentPadding: EdgeInsets.only(left: 15, top:5, right:15, bottom: 5),
       leading: ClipRRect(
-        borderRadius: BorderRadius.circular(4.0),
+        borderRadius: BorderRadius.circular(15),
         child:
             Image.network(playlistSongs.album.coverMedium, fit: BoxFit.cover),
       ),
       title: Text(
         '${playlistSongs.title}',
+        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         // style: TextStyle(fontSize: 20),
       ),
-      subtitle: Text('${playlistSongs.artist.name}'),
+      subtitle: Text('${playlistSongs.artist.name}', 
+      style: TextStyle(color: Colors.white, fontSize: 14),),
       trailing: IconButton(
-          icon: Icon(Icons.delete),
+          icon: Icon(Icons.delete, color: Theme.of(context).primaryIconTheme.color,),
           onPressed: () {
             provider.deleteSong(playlistSongs.id.toString());
             print('success');

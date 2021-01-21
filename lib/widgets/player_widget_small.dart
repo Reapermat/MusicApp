@@ -30,24 +30,15 @@ class _PlayerWidgetSmallState extends State<PlayerWidgetSmall> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, constraints) {
-        
-        print('player widget height ${constraints.biggest.height}');
-        print('player widget width ${constraints.biggest.width}');
         return StreamBuilder(
             stream: _assetsAudioPlayer.isPlaying,
             initialData: false,
             builder: (context, snapshotPlaying) {
               final isPlaying = snapshotPlaying.data;
               return Container(
-                // margin: EdgeInsets.all(4),
-                // style: NeumorphicStyle(
-                //   boxShape:
-                //       NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
-                // ),
+                color: Theme.of(context).primaryColorLight,
                 padding: const EdgeInsets.all(12.0),
                 child: 
-                // Column(
-                //   children: <Widget>[
                     Row(
                       children: <Widget>[
                         Expanded(

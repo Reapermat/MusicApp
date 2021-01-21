@@ -60,7 +60,7 @@ class _SearchBarMainState extends State<SearchBarMain> {
         //_poppedAudioPlayer
         widget.onAudioplayerChange(_poppedAudioPlayer);
         widget.onSongChange(true);
-        print('should call?');
+        // print('should call?');
       }
     }
   }

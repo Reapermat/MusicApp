@@ -11,8 +11,7 @@ class ErrorDialog extends StatelessWidget {
     return AlertDialog(
         backgroundColor: blueTheme.primaryColor,
         actionsPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: Text(
           'An Error Occured!',
           style: TextStyle(

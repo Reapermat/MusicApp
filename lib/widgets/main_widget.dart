@@ -12,9 +12,17 @@ import 'search_bar_main.dart';
 import 'error_dialog.dart';
 import 'player_widget_small.dart';
 import 'gridtile_main.dart';
-import '../screens/playlist_screen.dart';
+import '../screens/favorite_screen.dart';
 
 class MainWidget extends StatefulWidget {
+  final Future Function(AudioPlayer) onAudioplayerChange;
+
+  final Function(bool) onSongChange;
+
+  final AudioPlayer poppedAudioPlayer;
+
+  MainWidget(
+      {this.onAudioplayerChange, this.onSongChange, this.poppedAudioPlayer});
   @override
   _MainWidgetState createState() => _MainWidgetState();
 }
@@ -28,11 +36,11 @@ class _MainWidgetState extends State<MainWidget> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   bool _isPlaying = false;
   bool _isInit = true;
-  AudioPlayer _poppedAudioPlayer;
 
   @override
   void initState() {
     super.initState();
+
     setState(() {
       _tokenFuture = _getToken();
       _tokenFuture.then((user) {
@@ -40,6 +48,18 @@ class _MainWidgetState extends State<MainWidget> {
         _tracklist = user[1];
       });
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+
+    // print('but isnt');
+    if (widget.poppedAudioPlayer != null) {
+      _audioPlayer = widget.poppedAudioPlayer;
+      _isPlaying = true;
+      print('this should get it $_audioPlayer');
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -100,9 +120,9 @@ class _MainWidgetState extends State<MainWidget> {
                   flex: 1,
                   // fit: FlexFit.loose,
                   child: Container(
-                    // padding: EdgeInsets.all(10),
-                    // height: MediaQuery.of(context).size.height * 0.1,
-                    // width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(10),
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    width: MediaQuery.of(context).size.width,
                     child: ListTile(
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(4.0),
@@ -111,7 +131,7 @@ class _MainWidgetState extends State<MainWidget> {
                       ),
                       title: Text(
                         'hello, ${_userList.name}',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                     ),
                   ),
@@ -162,16 +182,15 @@ class _MainWidgetState extends State<MainWidget> {
                         // color: color,
                         decoration: BoxDecoration(
                           color: Theme.of(context).accentColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15)),
+                          borderRadius:
+                              BorderRadius.only(topLeft: Radius.circular(15)),
                         ),
                         // child: SizedBox(
                         //   height: MediaQuery.of(context).size.height * 0.5,
                         // ),
-                        //has to have child 
+                        //has to have child
                         //maybe boxdecoration
                       ),
-                      
                       RefreshIndicator(
                         onRefresh: () async {
                           try {
@@ -189,10 +208,12 @@ class _MainWidgetState extends State<MainWidget> {
                         child: Container(
                           // height: MediaQuery.of(context).size.height * 0.6,
                           // width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                          padding:
+                              EdgeInsets.only(left: 10, right: 10, top: 10),
                           child: GridView.builder(
                             padding: const EdgeInsets.all(5.0),
                             itemCount: _tracklist.data.length,
+
                             itemBuilder: (ctx, i) {
                               return GridtileMain(
                                 playlist: _playlist,
@@ -204,6 +225,8 @@ class _MainWidgetState extends State<MainWidget> {
                                   setState(() {
                                     _audioPlayer = audio;
                                   });
+                                  widget.onAudioplayerChange(_audioPlayer);
+                                  widget.onSongChange(true);
                                 },
                               );
                             },
@@ -227,6 +250,8 @@ class _MainWidgetState extends State<MainWidget> {
                             setState(() {
                               _audioPlayer = audio;
                             });
+                            widget.onAudioplayerChange(_audioPlayer);
+                            widget.onSongChange(true);
                           },
                         ),
                         flex: 1,
@@ -252,12 +277,9 @@ class _MainWidgetState extends State<MainWidget> {
               title: tracklist.title,
               artist: tracklist.artist.name,
               album: tracklist.album.title,
-              image: MetasImage.network(tracklist.album.coverMedium),
+              image: MetasImage.network(tracklist.album.coverXl),
             ),
           ));
-
-      print(
-          'playlist is from function ${_playlist.audios.elementAt(i).metas.title}');
     }
   }
 }

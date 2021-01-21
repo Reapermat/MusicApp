@@ -48,7 +48,7 @@ class _CurrentSongScreenState extends State<CurrentSongScreen> {
         body: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(bottom: 10),
             child: PlayerWidgetBig(
               onAudioplayerChange: (AudioPlayer audio) {
                 _audioPlayer = audio;

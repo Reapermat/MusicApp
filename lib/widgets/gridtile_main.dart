@@ -33,6 +33,7 @@ class _GridtileMainState extends State<GridtileMain> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
+
       child: GridTile(
         child: GestureDetector(
           onTap: () async {

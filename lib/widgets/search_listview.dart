@@ -58,21 +58,23 @@ class _SearchListViewState extends State<SearchListView> {
           await _assetsAudioPlayer
               .open(_audio,
                   showNotification: true,
+                  loopMode: LoopMode.single,
                   notificationSettings: NotificationSettings(
                     stopEnabled: false,
                   ))
               .then((_) async {
             // _getFavorite().then(() {
-              _audioPlayer = AudioPlayer(
-                  audio: _audio,
-                  title: searchList.title,
-                  imageUrl: searchList.album.coverMedium,
-                  isFavorite: _isFavorite);
-              widget.onSongChange(true);
-              widget.onAudioplayerChange(_audioPlayer);
+            _audioPlayer = AudioPlayer(
+                audio: _audio,
+                title: searchList.title,
+                imageUrl: searchList.album.coverMedium,
+                isFavorite: _isFavorite);
+            widget.onSongChange(true);
+            widget.onAudioplayerChange(_audioPlayer);
             // });
           })
               //when song ends then start playing that playlist from main?!!!!
+              //when song ends nothing happens for now
 
               .catchError((error) {
             return throw error;
@@ -86,10 +88,27 @@ class _SearchListViewState extends State<SearchListView> {
         }
       },
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(searchList.album.coverSmall),
+        contentPadding: EdgeInsets.only(left: 15, top:10, right:15, bottom: 10),
+        leading:
+            // CircleAvatar(
+            //   backgroundImage: NetworkImage(searchList.album.coverSmall),
+            // ),
+
+            ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Image.network(
+            searchList.album.coverMedium,
+            // _assetsAudioPlayer.current.value.audio.audio.metas.image.path,
+            // widget.playlist.audios.elementAt(index).
+            // height: constraints.maxHeight * 0.585,
+            // width: 25,
+            fit: BoxFit.cover,
+          ),
         ),
-        title: Text(searchList.title),
+        title: Text(
+          searchList.title,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

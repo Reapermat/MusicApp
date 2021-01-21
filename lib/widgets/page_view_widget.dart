@@ -52,7 +52,7 @@ class PageViewWidget extends StatelessWidget {
               title,
               style: TextStyle(
                   fontSize: 24,
-                  color: Colors.white,
+                  // color: Colors.white,
                   fontWeight: FontWeight.bold),
             ),
           ),
@@ -64,7 +64,7 @@ class PageViewWidget extends StatelessWidget {
               text,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white,
+                // color: Colors.white,
               ),
             ),
           ),

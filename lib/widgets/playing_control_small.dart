@@ -23,8 +23,6 @@ class PlayingControlSmall extends StatelessWidget {
     
     return LayoutBuilder(
       builder: (ctx, constraints) {
-        print('height ${constraints.biggest.height}');
-        print('width ${constraints.biggest.width}');
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,

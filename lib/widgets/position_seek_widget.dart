@@ -39,48 +39,97 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: 40,
-            child: Text(durationToString(widget.currentPosition)),
+    return Column(children: [
+      Container(
+        height: 10,
+        child: SliderTheme(
+          data: SliderThemeData(
+            activeTrackColor: Colors.white,
+            inactiveTrackColor: Color.fromRGBO(71, 71, 71, 1.0),
+            trackHeight: 3.0,
+            thumbColor: Colors.white,
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5.0),
           ),
-          Expanded(
-            child: NeumorphicSlider(
-              min: 0.0,
-              max: widget.duration.inMilliseconds.toDouble(),
-              value: percent * widget.duration.inMilliseconds.toDouble(),
-              style:
-                  SliderStyle(variant: Colors.grey, accent: Colors.grey[500]),
-              onChangeEnd: (newValue) {
-                setState(() {
-                  listenOnlyUserInterraction = false;
-                  widget.seekTo(_visibleValue);
-                });
-              },
-              onChangeStart: (_) {
-                setState(() {
-                  listenOnlyUserInterraction = true;
-                });
-              },
-              onChanged: (newValue) {
-                setState(() {
-                  final to = Duration(milliseconds: newValue.floor());
-                  _visibleValue = to;
-                });
-              },
-            ),
+          child: Slider(
+            min: 0.0,
+            max: widget.duration.inMilliseconds.toDouble(),
+            value: percent * widget.duration.inMilliseconds.toDouble(),
+            onChangeEnd: (newValue) {
+              setState(() {
+                listenOnlyUserInterraction = false;
+                widget.seekTo(_visibleValue);
+              });
+            },
+            onChangeStart: (_) {
+              setState(() {
+                listenOnlyUserInterraction = true;
+              });
+            },
+            onChanged: (newValue) {
+              setState(() {
+                final to = Duration(milliseconds: newValue.floor());
+                _visibleValue = to;
+              });
+            },
           ),
-          SizedBox(
-            width: 40,
-            child: Text(durationToString(widget.duration)),
-          ),
-        ],
+        ),
       ),
-    );
+
+      Container(
+        height: 20,
+        child: ListTile(
+          leading: Text(durationToString(widget.currentPosition)),
+          trailing: Text(durationToString(widget.duration)),
+        ),
+      ),
+
+      // Row(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: <Widget>[
+      //     SizedBox(
+      //       width: 40,
+      //       child: Text(durationToString(widget.currentPosition)),
+      //     ),
+      //     Expanded(
+      //       child: SliderTheme(
+      //         data: SliderThemeData(
+      //           activeTrackColor: Colors.white,
+      //           inactiveTrackColor: Color.fromRGBO(71, 71, 71, 1.0),
+      //           trackHeight: 3.0,
+      //           thumbColor: Colors.white,
+      //           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5.0),
+      //         ),
+      //         child: Slider(
+      //           min: 0.0,
+      //           max: widget.duration.inMilliseconds.toDouble(),
+      //           value: percent * widget.duration.inMilliseconds.toDouble(),
+      //           onChangeEnd: (newValue) {
+      //             setState(() {
+      //               listenOnlyUserInterraction = false;
+      //               widget.seekTo(_visibleValue);
+      //             });
+      //           },
+      //           onChangeStart: (_) {
+      //             setState(() {
+      //               listenOnlyUserInterraction = true;
+      //             });
+      //           },
+      //           onChanged: (newValue) {
+      //             setState(() {
+      //               final to = Duration(milliseconds: newValue.floor());
+      //               _visibleValue = to;
+      //             });
+      //           },
+      //         ),
+      //       ),
+      //     ),
+      //     SizedBox(
+      //       width: 40,
+      //       child: Text(durationToString(widget.duration)),
+      //     ),
+      //   ],
+      // ),
+    ]);
   }
 }
 
@@ -96,5 +145,3 @@ String durationToString(Duration duration) {
       twoDigits(duration.inSeconds.remainder(Duration.secondsPerMinute));
   return "$twoDigitMinutes:$twoDigitSeconds";
 }
-
-

@@ -85,16 +85,19 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: (){
-        Navigator.of(context).pop(_audioPlayer);
+      onWillPop: () {
+        Navigator.of(context)
+            .pop(_audioPlayer); //and isPlaying maybe send a list back
         print('pop');
       },
-          child: Scaffold(
+      child: Scaffold(
         appBar: AppBar(
-          title: Text('Search Page'),
+          title: Text('Search'),
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () { //doesnt work when system presses back set onWillPop
+            onPressed: () {
+              //doesnt work when system presses back set onWillPop
               print('pop');
               Navigator.of(context).pop(_audioPlayer);
             },
@@ -103,45 +106,64 @@ class _SearchScreenState extends State<SearchScreen> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(15),
+          // padding: EdgeInsets.all(15),
           child: Column(
             children: [
-              Flexible(
+              Expanded(
                 flex: 1,
                 child: Form(
                     key: _form,
                     child: Column(
                       children: [
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Search'),
-                          initialValue: search,
-                          textInputAction: TextInputAction.done,
-                          onFieldSubmitted: (input) {
-                            search = input;
-                            // ScreenArguments(search: search);
-                            try {
-                              _submit(search);
-                            } catch (error) {
-                              return ErrorDialog('Try again later');
-                            }
-                          }, // buttona tu na pewno trza dac
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please provide a value.';
-                            }
-                            return null;
-                          },
+                        Container(
+                          margin: EdgeInsets.all(15),
+                          child: TextFormField(
+                            style: TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              hintStyle: TextStyle(color: Colors.white),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Theme.of(context).primaryIconTheme.color,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15)),
+                            ),
+
+                            initialValue: search,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (input) {
+                              search = input;
+                              // ScreenArguments(search: search);
+                              try {
+                                _submit(search);
+                              } catch (error) {
+                                return ErrorDialog('Try again later');
+                              }
+                            }, // buttona tu na pewno trza dac
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please provide a value.';
+                              }
+                              return null;
+                            },
+                          ),
                         )
                       ],
                     )),
-                fit: FlexFit.tight,
+                // fit: FlexFit.tight,
               ), //what to do when in this page
-              Flexible(
+              Expanded(
                 flex: 4,
                 child: FutureBuilder(
                   future: _searchFuture,
                   builder: (ctx, dataSnapshot) {
-                    if (dataSnapshot.connectionState == ConnectionState.waiting) {
+                    if (dataSnapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else {
                       if (dataSnapshot.error != null) {
@@ -173,11 +195,11 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               //need to put player below
               _isPlaying
-                  ? Flexible(
+                  ? Expanded(
                       child: PlayerWidgetSmall(audioPlayer: _audioPlayer),
                       flex: 1,
                     )
-                  : Flexible(child: Container(), flex: 0),
+                  : Expanded(child: Container(), flex: 0),
             ],
           ),
         ),

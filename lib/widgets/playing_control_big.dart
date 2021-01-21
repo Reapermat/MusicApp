@@ -22,6 +22,8 @@ class PlayingControlBig extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, constraints) {
+        print('contraints height ${constraints.biggest.height}');
+        print('contraints width ${constraints.biggest.width}');
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -29,55 +31,90 @@ class PlayingControlBig extends StatelessWidget {
             SizedBox(
               width: 12,
             ),
-            NeumorphicButton(
-              style: NeumorphicStyle(
-                boxShape: NeumorphicBoxShape.circle(),
-              ),
-              padding: EdgeInsets.all(18),
-              onPressed: this.onPrevious,
-              child: Icon(Icons.skip_previous),
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            NeumorphicButton(
-              style: NeumorphicStyle(
-                boxShape: NeumorphicBoxShape.circle(),
-              ),
-              padding: EdgeInsets.all(8),
-              onPressed: this.onPlay,
-              child: Icon(
-                isPlaying ? Icons.pause : Icons.play_arrow,
-                size:
-                    min(constraints.biggest.height, constraints.biggest.width) /
-                        5,
-              ),
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            NeumorphicButton(
-              style: NeumorphicStyle(
-                boxShape: NeumorphicBoxShape.circle(),
-              ),
-              padding: EdgeInsets.all(18),
-              child: Icon(Icons.skip_next),
-              onPressed: this.onNext,
-            ),
-            if (onStop != null)
-              NeumorphicButton(
-                style: NeumorphicStyle(
-                  boxShape: NeumorphicBoxShape.circle(),
+            Container(
+              // margin: EdgeInsets.only(left: 50),
+              // padding: EdgeInsets.all(4),
+              // height: 64,
+              height: constraints.biggest.height * 0.58,
+              width: constraints.biggest.width * 0.16,
+              child: RaisedButton(
+                elevation: 8,
+                color: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(8),
+                onPressed: this.onPrevious,
+                child: Icon(
+                  Icons.skip_previous_rounded,
+  color: Colors.white,
+                  size: min(constraints.biggest.height,
+                          constraints.biggest.width) *
+                      0.4,
+                  // contraints.maxHeight * 0.585
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            // NeumorphicButton(
+            //   padding: EdgeInsets.all(8),
+            //   onPressed: this.onPlay,
+            //   child: Icon(
+            //     isPlaying ? Icons.pause : Icons.play_arrow,
+            //   ),
+            // ),
+            Container(
+              // margin: EdgeInsets.only(left: 50),
+              // padding: EdgeInsets.all(4),
+              // height: 64,
+              height: constraints.biggest.height * 0.58,
+              width: constraints.biggest.width * 0.16,
+              child: RaisedButton(
+                elevation: 8,
+                color: Theme.of(context).accentColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: EdgeInsets.all(8),
                 onPressed: this.onPlay,
                 child: Icon(
-                  Icons.stop,
+                  isPlaying ? Icons.pause : Icons.play_arrow,
                   size: min(constraints.biggest.height,
-                          constraints.biggest.width) /
-                      5,
+                          constraints.biggest.width) *
+                      0.4,
+                  // contraints.maxHeight * 0.585
                 ),
               ),
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            Container(
+              // margin: EdgeInsets.only(left: 50),
+              // padding: EdgeInsets.all(4),
+              // height: 64,
+              height: constraints.biggest.height * 0.58,
+              width: constraints.biggest.width * 0.16,
+              child: RaisedButton(
+                elevation: 8,
+                color: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: EdgeInsets.all(8),
+                onPressed: this.onNext,
+                child: Icon(
+                  Icons.skip_next_sharp,
+                  color: Colors.white,
+                  size: min(constraints.biggest.height,
+                          constraints.biggest.width) *
+                      0.4,
+                  // contraints.maxHeight * 0.585
+                ),
+              ),
+            ),
           ],
         );
       },

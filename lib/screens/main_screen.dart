@@ -1,7 +1,13 @@
+import 'package:MusicApp/themes/theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
 import '../widgets/main_widget.dart';
+import '../widgets/app_drawer.dart';
+import 'screen_arguments.dart';
+import 'search_screen.dart';
+import '../providers/models/audio_player.dart';
+import '../widgets/error_dialog.dart';
 
 class MainScreen extends StatefulWidget {
   static final routeName = 'main-screen';
@@ -12,8 +18,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   SearchBar _searchBar;
-
-  
+  AudioPlayer _audioPlayer;
+  bool _isPlaying = false;
+  AudioPlayer _poppedAudioPlayer;
 
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
@@ -23,7 +30,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _MainScreenState() {
-
     _searchBar = new SearchBar(
         inBar: true,
         buildDefaultAppBar: buildAppBar,
@@ -44,19 +50,71 @@ class _MainScreenState extends State<MainScreen> {
     //   child:
     return Scaffold(
       appBar: _searchBar.build(context),
-      drawer: Drawer(),
+      drawer: AppDrawer(),
       backgroundColor: Theme.of(context).primaryColor,
       body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-          child: MainWidget()),
+          padding: EdgeInsets.only(top: 10),
+          child: MainWidget(
+            poppedAudioPlayer:
+                _audioPlayer, //DEF NEED TO FIX THIS when i stary audioplayer on the other screen it doesnt pass it
+            onSongChange: (bool val) {
+              _isPlaying = val;
+              // print(_isPlaying);
+            },
+            onAudioplayerChange: (AudioPlayer audio) {
+              print('sent audio $audio');
+              // setState(() {
+              _audioPlayer = audio;
+              // });
+            },
+          )),
     );
     // );
   }
 
-  void onSubmitted(String value) {
+  void onSubmitted(String value) async {
     print(value);
+    if (value.isEmpty) {
+      return showDialog(
+        context: context,
+        builder: (_) => ErrorDialog('Please enter some text'),
+      );
+    } else {
+      final result = await Navigator.of(context).pushNamed(
+        SearchScreen.routeName,
+        arguments: ScreenArguments(search: value, audioPlayer: _audioPlayer),
+        // maybe its not sending it correctly
+      );
+
+      if (result != null) {
+        _poppedAudioPlayer = result;
+        if (_audioPlayer != null) {
+          print('widget is ${_audioPlayer.title}');
+          if (_poppedAudioPlayer.audio.path != _audioPlayer.audio.path) {
+            setState(() {
+              _audioPlayer =
+                  _poppedAudioPlayer; //its setting it but not sending
+            });
+            print('widget is $_audioPlayer');
+            // widget.onAudioplayerChange(widget.audioPlayer);
+            // widget.onSongChange(true);
+            //callback
+          }
+        } else {
+          setState(() {
+            _audioPlayer = _poppedAudioPlayer; //its setting it but not sending
+          });
+          print('widget is $_audioPlayer');
+          //callback
+          //_poppedAudioPlayer
+          // widget.onAudioplayerChange(_poppedAudioPlayer);
+          // widget.onSongChange(true);
+          // print('should call?');
+        }
+      }
+    }
   }
 
   Future<bool> _onBackPressed() {

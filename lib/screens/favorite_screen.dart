@@ -8,14 +8,15 @@ import '../widgets/playlist_widget.dart';
 import '../providers/models/audio_player.dart';
 import '../widgets/player_widget_small.dart';
 import 'screen_arguments.dart';
+import '../widgets/app_drawer.dart';
 
-class PlaylistScreen extends StatefulWidget {
+class FavoriteScreen extends StatefulWidget {
   static final routeName = 'create-playlist';
   @override
-  _PlaylistScreenState createState() => _PlaylistScreenState();
+  _FavoriteScreenState createState() => _FavoriteScreenState();
 }
 
-class _PlaylistScreenState extends State<PlaylistScreen> {
+class _FavoriteScreenState extends State<FavoriteScreen> {
   Future _playlist;
   PlaylistSongs _playlistSongs;
   AudioPlayer _audioPlayer;
@@ -34,11 +35,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   void didChangeDependencies() {
     print('dependecies');
 
-    ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    if (args.audioPlayer != null) {
-      _audioPlayer = args.audioPlayer;
-      _isPlaying = true;
-    }
+    // ScreenArguments args = ModalRoute.of(context).settings.arguments;
+    // if (args.audioPlayer != null) {
+    //   _audioPlayer = args.audioPlayer;
+    //   _isPlaying = true;
+    // }
 
     super.didChangeDependencies();
   }
@@ -62,7 +63,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('playlist'),
+          title: Text('Favorites'),
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -75,7 +77,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(10),
+          // padding: EdgeInsets.all(10),
           child: FutureBuilder(
               future: _playlist,
               builder: (ctx, dataSnapshot) {
@@ -104,9 +106,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                 }
                               },
                               child: Container(
-                                padding: EdgeInsets.all(10),
+                                // padding: EdgeInsets.all(10),
                                 child: ListView.builder(
-                                    padding: const EdgeInsets.all(10),
+                                    // padding: const EdgeInsets.all(10),
                                     itemCount: _playlistSongs.total,
                                     itemBuilder: (ctx, i) {
                                       return PlaylistWidget(
