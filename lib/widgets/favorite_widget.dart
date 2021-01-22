@@ -7,8 +7,11 @@ import '../providers/models/audio_player.dart';
 import '../providers/authentication.dart';
 import 'error_dialog.dart';
 
-class PlaylistWidget extends StatefulWidget {
+class FavoriteWidget extends StatefulWidget {
   PlaylistSongs playlistSongs;
+
+  AudioPlayer audioPlayer;
+
   final int i;
 
   final Function(bool) onSongChange;
@@ -17,20 +20,21 @@ class PlaylistWidget extends StatefulWidget {
 
   final Function(bool) onSongDeleted;
 
-  PlaylistWidget(
+  FavoriteWidget(
       {this.playlistSongs,
       this.i,
       this.onSongChange,
       this.onAudioplayerChange,
-      this.onSongDeleted});
+      this.onSongDeleted,
+      this.audioPlayer});
 
   @override
-  _PlaylistWidgetState createState() => _PlaylistWidgetState();
+  _FavoriteWidgetState createState() => _FavoriteWidgetState();
 }
 
-class _PlaylistWidgetState extends State<PlaylistWidget> {
+class _FavoriteWidgetState extends State<FavoriteWidget> {
   Audio _audio;
-  AudioPlayer _audioPlayer;
+  AudioPlayer _audioPlayer; 
 
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   var _isFavorite = false;
@@ -45,11 +49,16 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
 
   @override
   Widget build(BuildContext context) {
+    _audioPlayer = widget.audioPlayer;
     var playlistSongs = widget.playlistSongs.data.elementAt(widget.i);
     var provider = Provider.of<Authentication>(context, listen: false);
 
+    if (_assetsAudioPlayer.currentLoopMode.index == 2) {
+      _listen();
+    }
+
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 15, top:5, right:15, bottom: 5),
+      contentPadding: EdgeInsets.only(left: 15, top: 5, right: 15, bottom: 5),
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child:
@@ -57,13 +66,19 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
       ),
       title: Text(
         '${playlistSongs.title}',
-        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         // style: TextStyle(fontSize: 20),
       ),
-      subtitle: Text('${playlistSongs.artist.name}', 
-      style: TextStyle(color: Colors.white, fontSize: 14),),
+      subtitle: Text(
+        '${playlistSongs.artist.name}',
+        style: TextStyle(color: Colors.white, fontSize: 14),
+      ),
       trailing: IconButton(
-          icon: Icon(Icons.delete, color: Theme.of(context).primaryIconTheme.color,),
+          icon: Icon(
+            Icons.delete,
+            color: Theme.of(context).primaryIconTheme.color,
+          ),
           onPressed: () {
             provider.deleteSong(playlistSongs.id.toString());
             print('success');
@@ -93,19 +108,20 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
           //     title: playlistSongs.title,
           //     imageUrl: playlistSongs.album.coverMedium);
 
-          await _assetsAudioPlayer
+          await _assetsAudioPlayer //listen like in gridTileView
               .open(_audio,
                   showNotification: true,
+                  loopMode: LoopMode.single,
                   notificationSettings: NotificationSettings(
                     stopEnabled: false,
                   ))
               .then((_) async {
             // await _getFavorite().then(() {
-              _audioPlayer = AudioPlayer(
-                  audio: _audio,
-                  title: playlistSongs.title,
-                  imageUrl: playlistSongs.album.coverMedium,
-                  isFavorite: _isFavorite);
+            _audioPlayer = AudioPlayer(
+                audio: _audio,
+                title: playlistSongs.title,
+                imageUrl: playlistSongs.album.coverMedium,
+                isFavorite: _isFavorite);
             // });
           })
               //when song ends then start playing that playlist from main?!!!!
@@ -127,6 +143,34 @@ class _PlaylistWidgetState extends State<PlaylistWidget> {
         //can go to big player
       },
     );
+  }
+
+  _listen() async {
+    _assetsAudioPlayer.playlistAudioFinished.listen((stopped) async {
+      print('you in here 1');
+      //when goes previous it doesnt call this one
+      //when i click prev button then call this??
+      Future.delayed(Duration(seconds: 1)).then((_) async {
+        print('you in here 2');
+        print(_assetsAudioPlayer.current.value.audio.audio.path);
+        print(_audioPlayer.audio.path);
+        if (_assetsAudioPlayer.current.value.audio.audio.path !=
+            _audioPlayer.audio.path) {
+          //this is null
+          print('you in here 3');
+          _audioPlayer = AudioPlayer(
+              audio: _assetsAudioPlayer.current.value.audio.audio,
+              title: _assetsAudioPlayer.current.value.audio.audio.metas.title,
+              imageUrl:
+                  _assetsAudioPlayer.current.value.audio.audio.metas.image.path,
+              isFavorite: _isFavorite);
+
+          widget.onAudioplayerChange(_audioPlayer);
+
+          print('currently changed');
+        }
+      });
+    });
   }
 
   // _getFavorite() async {

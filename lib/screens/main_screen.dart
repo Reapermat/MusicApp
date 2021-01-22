@@ -19,7 +19,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   SearchBar _searchBar;
   AudioPlayer _audioPlayer;
-  bool _isPlaying = false;
   AudioPlayer _poppedAudioPlayer;
 
   AppBar buildAppBar(BuildContext context) {
@@ -50,7 +49,9 @@ class _MainScreenState extends State<MainScreen> {
     //   child:
     return Scaffold(
       appBar: _searchBar.build(context),
-      drawer: AppDrawer(),
+      drawer: AppDrawer(
+        audioPlayer: _audioPlayer,    //when starts in main it doesnt send it need to get the auioPlayer from main
+      ),
       backgroundColor: Theme.of(context).primaryColor,
       body: Container(
           height: MediaQuery.of(context).size.height,
@@ -58,16 +59,15 @@ class _MainScreenState extends State<MainScreen> {
           padding: EdgeInsets.only(top: 10),
           child: MainWidget(
             poppedAudioPlayer:
-                _audioPlayer, //DEF NEED TO FIX THIS when i stary audioplayer on the other screen it doesnt pass it
+                _audioPlayer, 
             onSongChange: (bool val) {
-              _isPlaying = val;
+              // _isPlaying = val;
               // print(_isPlaying);
             },
             onAudioplayerChange: (AudioPlayer audio) {
-              print('sent audio $audio');
-              // setState(() {
+              setState(() {
               _audioPlayer = audio;
-              // });
+              });
             },
           )),
     );
@@ -97,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
               _audioPlayer =
                   _poppedAudioPlayer; //its setting it but not sending
             });
-            print('widget is $_audioPlayer');
+            print('widget is ${_audioPlayer.title}');
             // widget.onAudioplayerChange(widget.audioPlayer);
             // widget.onSongChange(true);
             //callback

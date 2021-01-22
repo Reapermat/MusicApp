@@ -52,7 +52,6 @@ class _MainWidgetState extends State<MainWidget> {
 
   @override
   void didChangeDependencies() {
-
     // print('but isnt');
     if (widget.poppedAudioPlayer != null) {
       _audioPlayer = widget.poppedAudioPlayer;
@@ -84,6 +83,29 @@ class _MainWidgetState extends State<MainWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.poppedAudioPlayer != null) {
+      print(widget.poppedAudioPlayer.audio.path);
+      if (_audioPlayer != null) {
+        if (_audioPlayer.audio.path !=
+                _assetsAudioPlayer.current.value.audio.audio.path &&
+            widget.poppedAudioPlayer.audio.path ==
+                _assetsAudioPlayer.current.value.audio.audio.path) {
+          setState(() {
+            _audioPlayer = widget.poppedAudioPlayer;
+            _isPlaying = true;
+          });
+        }
+      } else if (widget.poppedAudioPlayer.audio.path ==
+          _assetsAudioPlayer.current.value.audio.audio.path) {
+        setState(() {
+          _audioPlayer = widget.poppedAudioPlayer;
+          _isPlaying = true;
+        });
+      }
+    }
+
+    // print(_assetsAudioPlayer.current.value.audio.audio.path);
+
     return FutureBuilder(
       future: _tokenFuture,
       builder: (ctx, dataSnapshot) {
@@ -213,7 +235,6 @@ class _MainWidgetState extends State<MainWidget> {
                           child: GridView.builder(
                             padding: const EdgeInsets.all(5.0),
                             itemCount: _tracklist.data.length,
-
                             itemBuilder: (ctx, i) {
                               return GridtileMain(
                                 playlist: _playlist,
@@ -223,10 +244,11 @@ class _MainWidgetState extends State<MainWidget> {
                                 },
                                 onAudioplayerChange: (AudioPlayer audio) {
                                   setState(() {
-                                    _audioPlayer = audio;
+                                    _audioPlayer = audio; //send it to screen
+                                    widget.onAudioplayerChange(_audioPlayer);
+                                    widget.onSongChange(true);
+                                    print('sent');
                                   });
-                                  widget.onAudioplayerChange(_audioPlayer);
-                                  widget.onSongChange(true);
                                 },
                               );
                             },

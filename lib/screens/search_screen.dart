@@ -174,6 +174,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           itemCount: _searchElem.data.length,
                           itemBuilder: (ctx, i) {
                             return SearchListView(
+                              audioPlayer: _audioPlayer,
                               searchElem: _searchElem,
                               i: i,
                               onSongChange: (bool val) {
@@ -205,5 +206,8 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+    
   }
+  
+  
 }

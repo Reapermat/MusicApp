@@ -6,10 +6,13 @@ import 'package:provider/provider.dart';
 import '../providers/models/search.dart';
 import './error_dialog.dart';
 import '../providers/authentication.dart';
+import '../providers/models/audio_player.dart';
 
 class SearchListView extends StatefulWidget {
   Search searchElem;
   int i;
+  AudioPlayer audioPlayer;
+
   final Function(bool) onSongChange;
 
   final Future Function(AudioPlayer) onAudioplayerChange;
@@ -18,7 +21,8 @@ class SearchListView extends StatefulWidget {
       {@required this.searchElem,
       @required this.i,
       @required this.onAudioplayerChange,
-      @required this.onSongChange});
+      @required this.onSongChange,
+      this.audioPlayer});
 
   @override
   _SearchListViewState createState() => _SearchListViewState();
@@ -27,12 +31,16 @@ class SearchListView extends StatefulWidget {
 class _SearchListViewState extends State<SearchListView> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   var _isFavorite = false;
-
+  Audio _audio;
+  AudioPlayer _audioPlayer;
   @override
   Widget build(BuildContext context) {
     var searchList = widget.searchElem.data.elementAt(widget.i);
-    Audio _audio;
-    AudioPlayer _audioPlayer;
+
+    _audioPlayer = widget.audioPlayer;
+    if (_assetsAudioPlayer.currentLoopMode.index == 2) {
+      _listen();
+    }
 
     return GestureDetector(
       onTap: () async {
@@ -55,7 +63,7 @@ class _SearchListViewState extends State<SearchListView> {
           //     title: searchList.title,
           //     imageUrl: searchList.album.coverMedium);
 
-          await _assetsAudioPlayer
+          await _assetsAudioPlayer //listen like in gridTileView
               .open(_audio,
                   showNotification: true,
                   loopMode: LoopMode.single,
@@ -88,7 +96,8 @@ class _SearchListViewState extends State<SearchListView> {
         }
       },
       child: ListTile(
-        contentPadding: EdgeInsets.only(left: 15, top:10, right:15, bottom: 10),
+        contentPadding:
+            EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
         leading:
             // CircleAvatar(
             //   backgroundImage: NetworkImage(searchList.album.coverSmall),
@@ -132,4 +141,25 @@ class _SearchListViewState extends State<SearchListView> {
   //   });
   //   return _isFavorite;
   // }
+  _listen() async {
+    _assetsAudioPlayer.playlistAudioFinished.listen((stopped) async {
+      Future.delayed(Duration(seconds: 1)).then((_) async {
+        print(_assetsAudioPlayer.current.value.audio.audio.path);
+        print(_audioPlayer.audio.path);
+        if (_assetsAudioPlayer.current.value.audio.audio.path !=
+            _audioPlayer.audio.path) {
+          
+          _audioPlayer = AudioPlayer(
+              audio: _assetsAudioPlayer.current.value.audio.audio,
+              title: _assetsAudioPlayer.current.value.audio.audio.metas.title,
+              imageUrl:
+                  _assetsAudioPlayer.current.value.audio.audio.metas.image.path,
+              isFavorite: _isFavorite);
+
+          widget.onAudioplayerChange(_audioPlayer);
+
+        }
+      });
+    });
+  }
 }

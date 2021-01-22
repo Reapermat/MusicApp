@@ -4,13 +4,14 @@ import 'package:provider/provider.dart';
 import '../providers/authentication.dart';
 import '../providers/models/playlist_songs.dart';
 import '../widgets/error_dialog.dart';
-import '../widgets/playlist_widget.dart';
+import '../widgets/favorite_widget.dart';
 import '../providers/models/audio_player.dart';
 import '../widgets/player_widget_small.dart';
 import 'screen_arguments.dart';
 import '../widgets/app_drawer.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
-class FavoriteScreen extends StatefulWidget {
+class FavoriteScreen extends StatefulWidget { 
   static final routeName = 'create-playlist';
   @override
   _FavoriteScreenState createState() => _FavoriteScreenState();
@@ -21,6 +22,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   PlaylistSongs _playlistSongs;
   AudioPlayer _audioPlayer;
   bool _isPlaying = false;
+  final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
 
   @override
   void initState() {
@@ -34,12 +36,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   void didChangeDependencies() {
     print('dependecies');
-
-    // ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    // if (args.audioPlayer != null) {
-    //   _audioPlayer = args.audioPlayer;
-    //   _isPlaying = true;
-    // }
 
     super.didChangeDependencies();
   }
@@ -56,6 +52,29 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenArguments args = ModalRoute.of(context).settings.arguments;     //need to send when it starts here
+    print(args);
+    print(_assetsAudioPlayer.current.value);    //when song changes it doesnt show
+    if (args.audioPlayer != null) {
+      if (_audioPlayer != null) {
+        if (_audioPlayer.audio.path !=
+                _assetsAudioPlayer.current.value.audio.audio.path &&
+            args.audioPlayer.audio.path ==
+                _assetsAudioPlayer.current.value.audio.audio.path) {
+          setState(() {
+            _audioPlayer = args.audioPlayer;
+            _isPlaying = true;
+          });
+        }
+      } else if (args.audioPlayer.audio.path ==
+          _assetsAudioPlayer.current.value.audio.audio.path) {
+        setState(() {
+          _audioPlayer = args.audioPlayer;
+          _isPlaying = true;
+        });
+      }
+    }
+    print(_isPlaying);
     return WillPopScope(
       onWillPop: () {
         Navigator.of(context).pop(_audioPlayer);
@@ -111,7 +130,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                     // padding: const EdgeInsets.all(10),
                                     itemCount: _playlistSongs.total,
                                     itemBuilder: (ctx, i) {
-                                      return PlaylistWidget(
+                                      return FavoriteWidget(
+                                        
+                                        audioPlayer: _audioPlayer,
                                         playlistSongs: _playlistSongs,
                                         i: i,
                                         onSongChange: (bool val) {

@@ -3,18 +3,16 @@ import 'package:provider/provider.dart';
 
 import './providers/authentication.dart';
 import './providers/search_content.dart';
-import 'screens/main_screen.dart';
-import 'screens/main_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/screen_arguments.dart';
-import 'screens/search_screen.dart';
+import './screens/loading_screen.dart';
+import './themes/theme_data.dart';
+import './themes/theme_notifier.dart';
 import 'screens/current_song_screen.dart';
 import 'screens/favorite_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/main_screen.dart';
 import 'screens/onboard_screen.dart';
+import 'screens/search_screen.dart';
 import 'screens/settings_screen.dart';
-import './screens/loading_screen.dart';
-import './themes/theme_notifier.dart';
-import './themes/theme_data.dart';
 
 void main() {
   runApp(MultiProvider(

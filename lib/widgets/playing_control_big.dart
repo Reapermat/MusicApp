@@ -22,8 +22,6 @@ class PlayingControlBig extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, constraints) {
-        print('contraints height ${constraints.biggest.height}');
-        print('contraints width ${constraints.biggest.width}');
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,

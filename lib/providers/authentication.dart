@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:assets_audio_player/assets_audio_player.dart' show AssetsAudioPlayer;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2_client/access_token_response.dart';
 
-import 'models/tracklist.dart';
-import 'models/user.dart';
 import 'models/playlist.dart';
 import 'models/playlist_songs.dart';
+import 'models/tracklist.dart';
+import 'models/user.dart';
 
 class Authentication extends ChangeNotifier {
   final String appId = '448382';

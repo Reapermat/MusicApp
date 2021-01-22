@@ -3,11 +3,21 @@ import 'package:flutter/material.dart';
 import '../screens/settings_screen.dart';
 import '../screens/main_screen.dart';
 import '../screens/favorite_screen.dart';
+import '../screens/screen_arguments.dart';
+import '../providers/models/audio_player.dart';
 
 class AppDrawer extends StatelessWidget {
 
+  
+  AudioPlayer audioPlayer;
+
+  AppDrawer({this.audioPlayer});
+
   @override
   Widget build(BuildContext context) {
+
+    print(audioPlayer.audio.metas.title);
+    
     return Drawer(
         child: ListView(
       children: [
@@ -55,8 +65,10 @@ class AppDrawer extends StatelessWidget {
             // if (fromFavorite) {
             //   Navigator.of(context).pop();
             // } else {
-              Navigator.of(context).popAndPushNamed(
-                FavoriteScreen.routeName,
+              print('from drawer $audioPlayer');
+              Navigator.of(context).popAndPushNamed(  //need to send audioplayer and stuff
+                FavoriteScreen.routeName, // get the result to send it to main
+                arguments: ScreenArguments(audioPlayer: audioPlayer),
               );
             // }
           },
