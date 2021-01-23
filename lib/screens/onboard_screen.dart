@@ -102,21 +102,21 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                     },
                     children: [
                       PageViewWidget(
-                        title: 'Hello',
+                        title: 'Welcome',
                         text:
-                            'Bacon ipsum dolor amet capicola buffalo pork belly, biltong chislic pork chop cupim chicken. Spare ribs shoulder biltong capicola landjaeger pork chop. Capicola pork turducken hamburger cupim strip steak chislic leberkas shoulder landjaeger ribeye chicken sirloin tenderloin. Brisket jowl bacon, meatloaf tenderloin pork belly corned beef sausage rump',
+                            'This is an application that I have created for my Engineering Thesis. \nThis project is a music application using the Deezer API.',
                         color: blueAccent,
                       ),
                       PageViewWidget(
-                        title: 'Hello 2',
+                        title: 'Functionality',
                         text:
-                            'Bacon ipsum dolor amet capicola buffalo pork belly, biltong chislic pork chop cupim chicken. Spare ribs shoulder biltong capicola landjaeger pork chop. Capicola pork turducken hamburger cupim strip steak chislic leberkas shoulder landjaeger ribeye chicken sirloin tenderloin. Brisket jowl bacon, meatloaf tenderloin pork belly corned beef sausage rump',
+                            'The main functionality of this application is the recommended songs for each user individually. \nYou can also search for songs and add them to your favorites list!',
                         color: pinkAccent,
                       ),
                       PageViewWidget(
-                        title: 'Hello 3',
+                        title: "Let's get started!",
                         text:
-                            'Bacon ipsum dolor amet capicola buffalo pork belly, biltong chislic pork chop cupim chicken. Spare ribs shoulder biltong capicola landjaeger pork chop. Capicola pork turducken hamburger cupim strip steak chislic leberkas shoulder landjaeger ribeye chicken sirloin tenderloin. Brisket jowl bacon, meatloaf tenderloin pork belly corned beef sausage rump',
+                            'Sign up and start exploring for new music!',
                         color: yellowAccent,
                       ),
                     ],

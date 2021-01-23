@@ -48,18 +48,18 @@ class PageViewWidget extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 30,
                   // color: Colors.white,
                   fontWeight: FontWeight.bold),
             ),
           ),
           Container(
             // height: MediaQuery.of(context).size.height * 0.3,
-            margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+            margin: EdgeInsets.only(top: 50, left: 30, right: 30),
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 // color: Colors.white,
               ),
             ),
