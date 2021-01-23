@@ -1,17 +1,14 @@
-import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-
-import '../providers/models/audio_player.dart';
-import 'position_seek_widget.dart';
-import 'playing_control_big.dart';
-import '../widgets/error_dialog.dart';
 import '../providers/authentication.dart';
 import '../providers/models/audio_player.dart';
+import '../widgets/error_dialog.dart';
+import 'playing_control_big.dart';
+import 'position_seek_widget.dart';
 
 class PlayerWidgetBig extends StatefulWidget {
   // final AudioPlayer audioPlayer;
@@ -58,7 +55,7 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
 
   Future<bool> _getFavorite() async {
     bool favorite =
-        false; //spierdolone to jest //trzeba porownac po porstu czy ten id jest w liscie czy nie jak jest to value smienic i tyle!!
+        false;    //trzeba porownac po porstu czy ten id jest w liscie czy nie jak jest to value smienic i tyle!
     return await Provider.of<Authentication>(context, listen: false)
         .getPlaylist()
         .then((songs) {
@@ -193,7 +190,7 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                   // ),
                 ],
               ),
-              
+
               Expanded(
                 flex: 2,
                 child: Container(
@@ -426,7 +423,6 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                   },
                 ),
               ),
-              
             ],
           );
         });

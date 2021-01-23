@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/models/playlist_songs.dart';
-import '../providers/models/audio_player.dart';
 import '../providers/authentication.dart';
+import '../providers/models/audio_player.dart';
+import '../providers/models/playlist_songs.dart';
 import 'error_dialog.dart';
 
 class FavoriteWidget extends StatefulWidget {
@@ -34,7 +34,7 @@ class FavoriteWidget extends StatefulWidget {
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   Audio _audio;
-  AudioPlayer _audioPlayer; 
+  AudioPlayer _audioPlayer;
 
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   var _isFavorite = false;
@@ -46,6 +46,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
 
     super.initState();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,6 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
         '${playlistSongs.title}',
         style: TextStyle(
             color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-        // style: TextStyle(fontSize: 20),
       ),
       subtitle: Text(
         '${playlistSongs.artist.name}',
@@ -81,11 +82,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           ),
           onPressed: () {
             provider.deleteSong(playlistSongs.id.toString());
-            print('success');
 
             widget.onSongDeleted(true);
-
-            // widget.onSongDeleted(false);
           }),
       onTap: () async {
         try {
@@ -124,7 +122,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                 isFavorite: _isFavorite);
             // });
           })
-              //when song ends then start playing that playlist from main?!!!!
+              //when song ends then start playing that playlist from main?
 
               .catchError((error) {
             return throw error;
@@ -148,7 +146,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   _listen() async {
     _assetsAudioPlayer.playlistAudioFinished.listen((stopped) async {
       print('you in here 1');
-      //when goes previous it doesnt call this one
+      //when goes previous it doesnt call this
       //when i click prev button then call this??
       Future.delayed(Duration(seconds: 1)).then((_) async {
         print('you in here 2');
@@ -156,7 +154,6 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
         print(_audioPlayer.audio.path);
         if (_assetsAudioPlayer.current.value.audio.audio.path !=
             _audioPlayer.audio.path) {
-          //this is null
           print('you in here 3');
           _audioPlayer = AudioPlayer(
               audio: _assetsAudioPlayer.current.value.audio.audio,
@@ -166,8 +163,6 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
               isFavorite: _isFavorite);
 
           widget.onAudioplayerChange(_audioPlayer);
-
-          print('currently changed');
         }
       });
     });

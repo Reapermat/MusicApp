@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../themes/theme_data.dart';
-import '../widgets/page_view_widget.dart';
 import '../screens/login_screen.dart';
 import '../screens/screen_arguments.dart';
+import '../themes/theme_data.dart';
+import '../widgets/page_view_widget.dart';
 
 class OnBoardScreen extends StatefulWidget {
   static final routeName = 'on-board';

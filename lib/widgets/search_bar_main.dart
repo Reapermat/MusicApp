@@ -72,13 +72,12 @@ class _SearchBarMainState extends State<SearchBarMain> {
         key: _form,
         child: Column(
           children: [
-            // tu jakies errory albo duperele by siem przydalo dac
             TextFormField(
               decoration: InputDecoration(labelText: 'Search'),
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (input) {
                 _submit(input);
-              }, // buttona tu na pewno trza dac
+              },
               // initialValue: args == null ? null : args.search, // when you come back it would be nice to show the other text
               validator: (value) {
                 if (value.isEmpty) {

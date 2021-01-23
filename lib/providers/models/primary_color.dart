@@ -19,7 +19,7 @@ class PrimaryColor {
     colorCustom = MaterialColor(0xF2E2E36, color);
   }
 
-  MaterialColor get getColor{
+  MaterialColor get getColor {
     return colorCustom;
   }
 }

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:provider/provider.dart';
 
 import './screen_arguments.dart';
+import '../providers/models/audio_player.dart';
 import '../providers/models/search.dart';
 import '../providers/search_content.dart';
 import '../widgets/error_dialog.dart';
-import '../providers/models/audio_player.dart';
-import '../widgets/search_listview.dart';
 import '../widgets/player_widget_small.dart';
+import '../widgets/search_listview.dart';
 
 class SearchScreen extends StatefulWidget {
   static final routeName = 'search-screen';
@@ -34,8 +33,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void didChangeDependencies() {
-    print('dependecies');
-
     ScreenArguments args = ModalRoute.of(context).settings.arguments;
 
     if (args.search != null) {
@@ -44,7 +41,6 @@ class _SearchScreenState extends State<SearchScreen> {
     if (args.audioPlayer != null) {
       _audioPlayer = args.audioPlayer;
       _isPlaying = true;
-      print('args is playing');
     }
 
     if (_isInit) {
@@ -59,7 +55,6 @@ class _SearchScreenState extends State<SearchScreen> {
   _getSearch() async {
     var provider = Provider.of<SearchContent>(context, listen: false);
     try {
-      print('from getSearch $search');
       return await provider.getSearchContent(search);
     } catch (error) {
       return throw error;
@@ -67,7 +62,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   _submit(String input) {
-    print('should be in here');
     _isInit = false;
     final isValid = _form.currentState.validate();
     if (!isValid) {
@@ -86,9 +80,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context)
-            .pop(_audioPlayer); //and isPlaying maybe send a list back
-        print('pop');
+        Navigator.of(context).pop(_audioPlayer);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -97,8 +89,6 @@ class _SearchScreenState extends State<SearchScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              //doesnt work when system presses back set onWillPop
-              print('pop');
               Navigator.of(context).pop(_audioPlayer);
             },
           ),
@@ -106,7 +96,6 @@ class _SearchScreenState extends State<SearchScreen> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          // padding: EdgeInsets.all(15),
           child: Column(
             children: [
               Expanded(
@@ -144,7 +133,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               } catch (error) {
                                 return ErrorDialog('Try again later');
                               }
-                            }, // buttona tu na pewno trza dac
+                            },
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Please provide a value.';
@@ -167,7 +156,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       return Center(child: CircularProgressIndicator());
                     } else {
                       if (dataSnapshot.error != null) {
-                        print(dataSnapshot.error);
                         return ErrorDialog('Try again later');
                       } else {
                         return ListView.builder(
@@ -179,7 +167,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               i: i,
                               onSongChange: (bool val) {
                                 _isPlaying = val;
-                                print('isPlaying $_isPlaying');
                               },
                               onAudioplayerChange: (AudioPlayer audio) {
                                 setState(() {
@@ -206,8 +193,5 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
-    
   }
-  
-  
 }

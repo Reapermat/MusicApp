@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/player_widget_big.dart';
 
 import '../providers/models/audio_player.dart';
+import '../widgets/player_widget_big.dart';
 import 'screen_arguments.dart';
 
 class CurrentSongScreen extends StatefulWidget {
@@ -31,7 +31,6 @@ class _CurrentSongScreenState extends State<CurrentSongScreen> {
     AudioPlayer _audioPlayer;
     return WillPopScope(
       onWillPop: () {
-        print('pop');
         Navigator.of(context).pop(_audioPlayer);
       },
       child: Scaffold(
@@ -40,7 +39,6 @@ class _CurrentSongScreenState extends State<CurrentSongScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              print('pop');
               Navigator.of(context).pop(_audioPlayer);
             },
           ),

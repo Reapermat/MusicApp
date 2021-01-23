@@ -1,73 +1,74 @@
 import 'dart:convert';
 
-PlaylistSongs playlistSongsFromJson(String str) => PlaylistSongs.fromJson(json.decode(str));
+PlaylistSongs playlistSongsFromJson(String str) =>
+    PlaylistSongs.fromJson(json.decode(str));
 
 String playlistSongsToJson(PlaylistSongs data) => json.encode(data.toJson());
 
 class PlaylistSongs {
-    PlaylistSongs({
-        this.data,
-        this.checksum,
-        this.total,
-    });
+  PlaylistSongs({
+    this.data,
+    this.checksum,
+    this.total,
+  });
 
-    List<Datum> data;
-    String checksum;
-    int total;
+  List<Datum> data;
+  String checksum;
+  int total;
 
-    factory PlaylistSongs.fromJson(Map<String, dynamic> json) => PlaylistSongs(
+  factory PlaylistSongs.fromJson(Map<String, dynamic> json) => PlaylistSongs(
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         checksum: json["checksum"],
         total: json["total"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
         "checksum": checksum,
         "total": total,
-    };
+      };
 }
 
 class Datum {
-    Datum({
-        this.id,
-        this.readable,
-        this.title,
-        this.titleShort,
-        this.titleVersion,
-        this.link,
-        this.duration,
-        this.rank,
-        this.explicitLyrics,
-        this.explicitContentLyrics,
-        this.explicitContentCover,
-        this.preview,
-        this.md5Image,
-        this.timeAdd,
-        this.artist,
-        this.album,
-        this.type,
-    });
+  Datum({
+    this.id,
+    this.readable,
+    this.title,
+    this.titleShort,
+    this.titleVersion,
+    this.link,
+    this.duration,
+    this.rank,
+    this.explicitLyrics,
+    this.explicitContentLyrics,
+    this.explicitContentCover,
+    this.preview,
+    this.md5Image,
+    this.timeAdd,
+    this.artist,
+    this.album,
+    this.type,
+  });
 
-    int id;
-    bool readable;
-    String title;
-    String titleShort;
-    String titleVersion;
-    String link;
-    int duration;
-    int rank;
-    bool explicitLyrics;
-    int explicitContentLyrics;
-    int explicitContentCover;
-    String preview;
-    String md5Image;
-    int timeAdd;
-    Artist artist;
-    Album album;
-    String type;
+  int id;
+  bool readable;
+  String title;
+  String titleShort;
+  String titleVersion;
+  String link;
+  int duration;
+  int rank;
+  bool explicitLyrics;
+  int explicitContentLyrics;
+  int explicitContentCover;
+  String preview;
+  String md5Image;
+  int timeAdd;
+  Artist artist;
+  Album album;
+  String type;
 
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         readable: json["readable"],
         title: json["title"],
@@ -85,9 +86,9 @@ class Datum {
         artist: Artist.fromJson(json["artist"]),
         album: Album.fromJson(json["album"]),
         type: json["type"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "readable": readable,
         "title": title,
@@ -105,35 +106,35 @@ class Datum {
         "artist": artist.toJson(),
         "album": album.toJson(),
         "type": type,
-    };
+      };
 }
 
 class Album {
-    Album({
-        this.id,
-        this.title,
-        this.cover,
-        this.coverSmall,
-        this.coverMedium,
-        this.coverBig,
-        this.coverXl,
-        this.md5Image,
-        this.tracklist,
-        this.type,
-    });
+  Album({
+    this.id,
+    this.title,
+    this.cover,
+    this.coverSmall,
+    this.coverMedium,
+    this.coverBig,
+    this.coverXl,
+    this.md5Image,
+    this.tracklist,
+    this.type,
+  });
 
-    int id;
-    String title;
-    String cover;
-    String coverSmall;
-    String coverMedium;
-    String coverBig;
-    String coverXl;
-    String md5Image;
-    String tracklist;
-    String type;
+  int id;
+  String title;
+  String cover;
+  String coverSmall;
+  String coverMedium;
+  String coverBig;
+  String coverXl;
+  String md5Image;
+  String tracklist;
+  String type;
 
-    factory Album.fromJson(Map<String, dynamic> json) => Album(
+  factory Album.fromJson(Map<String, dynamic> json) => Album(
         id: json["id"],
         title: json["title"],
         cover: json["cover"],
@@ -144,9 +145,9 @@ class Album {
         md5Image: json["md5_image"],
         tracklist: json["tracklist"],
         type: json["type"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
         "cover": cover,
@@ -157,35 +158,35 @@ class Album {
         "md5_image": md5Image,
         "tracklist": tracklist,
         "type": type,
-    };
+      };
 }
 
 class Artist {
-    Artist({
-        this.id,
-        this.name,
-        this.link,
-        this.picture,
-        this.pictureSmall,
-        this.pictureMedium,
-        this.pictureBig,
-        this.pictureXl,
-        this.tracklist,
-        this.type,
-    });
+  Artist({
+    this.id,
+    this.name,
+    this.link,
+    this.picture,
+    this.pictureSmall,
+    this.pictureMedium,
+    this.pictureBig,
+    this.pictureXl,
+    this.tracklist,
+    this.type,
+  });
 
-    int id;
-    String name;
-    String link;
-    String picture;
-    String pictureSmall;
-    String pictureMedium;
-    String pictureBig;
-    String pictureXl;
-    String tracklist;
-    String type;
+  int id;
+  String name;
+  String link;
+  String picture;
+  String pictureSmall;
+  String pictureMedium;
+  String pictureBig;
+  String pictureXl;
+  String tracklist;
+  String type;
 
-    factory Artist.fromJson(Map<String, dynamic> json) => Artist(
+  factory Artist.fromJson(Map<String, dynamic> json) => Artist(
         id: json["id"],
         name: json["name"],
         link: json["link"],
@@ -196,9 +197,9 @@ class Artist {
         pictureXl: json["picture_xl"],
         tracklist: json["tracklist"],
         type: json["type"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "link": link,
@@ -209,5 +210,5 @@ class Artist {
         "picture_xl": pictureXl,
         "tracklist": tracklist,
         "type": type,
-    };
+      };
 }

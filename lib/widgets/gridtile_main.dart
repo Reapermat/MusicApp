@@ -2,9 +2,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/authentication.dart';
 import '../providers/models/audio_player.dart';
 import 'error_dialog.dart';
-import '../providers/authentication.dart';
 
 class GridtileMain extends StatefulWidget {
   Playlist playlist = Playlist();
@@ -28,12 +28,20 @@ class _GridtileMainState extends State<GridtileMain> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   AudioPlayer _audioPlayer;
   var _isFavorite = false;
+  var _initState = true;
+
+  
 
   @override
   Widget build(BuildContext context) {
+    // if (_initState) {
+    _checkFavorite(widget.playlist.audios.elementAt(
+        widget.i)); //this is the best place to check the favorite status
+    //   _initState = false;
+    // }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
-
       child: GridTile(
         child: GestureDetector(
           onTap: () async {
@@ -60,7 +68,26 @@ class _GridtileMainState extends State<GridtileMain> {
           backgroundColor: Colors.black87,
           title: Text(
             widget.playlist.audios.elementAt(widget.i).metas.title,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
+          ),
+          trailing: IconButton(
+            icon: _isFavorite
+                ? Icon(Icons.favorite)
+                : Icon(Icons
+                    .favorite_border), //need to check if song is in favorite
+            onPressed: () {
+              //add to Favorites
+              _initState = true;
+              Provider.of<Authentication>(context, listen: false)
+                  .addPlaylistSong(
+                      widget.playlist.audios.elementAt(widget.i).metas.id)
+                  .then((value) {
+                setState(() {
+                  _isFavorite = !value;
+                });
+                _initState = false;
+              });
+            },
           ),
         ),
       ),
@@ -78,10 +105,6 @@ class _GridtileMainState extends State<GridtileMain> {
             //check how the prev button actually works in the file
             player.previous();
             Future.delayed(Duration(seconds: 1)).then((_) {
-              print(
-                  'player is ${player.current.value.audio.audio.metas.title}');
-              print(
-                  'player is assest: ${_assetsAudioPlayer.current.value.audio.audio.metas.title}');
               _audioPlayer = AudioPlayer(
                   audio: player.current.value.audio.audio,
                   title: player.current.value.audio.audio.metas.title,
@@ -103,7 +126,7 @@ class _GridtileMainState extends State<GridtileMain> {
       // });
     });
     _assetsAudioPlayer.playlistAudioFinished.listen((stopped) async {
-      //when goes previous it doesnt call this one
+      //when goes previous it doesnt call this
       //when i click prev button then call this??
       Future.delayed(Duration(seconds: 1)).then((_) async {
         if (_assetsAudioPlayer.current.value.audio.audio.path !=
@@ -120,6 +143,17 @@ class _GridtileMainState extends State<GridtileMain> {
           print('currently changed');
         }
       });
+    });
+  }
+
+  Future _checkFavorite(Audio audio) {
+    print('checking');
+    var provider = Provider.of<Authentication>(context, listen: false);
+    return provider.checkSong(audio).then((value) {
+      _isFavorite = value;
+      if (_isFavorite) {
+        setState(() {});
+      }
     });
   }
 }

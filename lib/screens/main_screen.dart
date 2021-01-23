@@ -1,13 +1,12 @@
-import 'package:MusicApp/themes/theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
-import '../widgets/main_widget.dart';
+import '../providers/models/audio_player.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/error_dialog.dart';
+import '../widgets/main_widget.dart';
 import 'screen_arguments.dart';
 import 'search_screen.dart';
-import '../providers/models/audio_player.dart';
-import '../widgets/error_dialog.dart';
 
 class MainScreen extends StatefulWidget {
   static final routeName = 'main-screen';
@@ -50,7 +49,8 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: _searchBar.build(context),
       drawer: AppDrawer(
-        audioPlayer: _audioPlayer,    //when starts in main it doesnt send it need to get the auioPlayer from main
+        audioPlayer:
+            _audioPlayer, //when starts in main it doesnt send it need to get the auioPlayer from main
       ),
       backgroundColor: Theme.of(context).primaryColor,
       body: Container(
@@ -58,15 +58,14 @@ class _MainScreenState extends State<MainScreen> {
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.only(top: 10),
           child: MainWidget(
-            poppedAudioPlayer:
-                _audioPlayer, 
+            poppedAudioPlayer: _audioPlayer,
             onSongChange: (bool val) {
               // _isPlaying = val;
               // print(_isPlaying);
             },
             onAudioplayerChange: (AudioPlayer audio) {
               setState(() {
-              _audioPlayer = audio;
+                _audioPlayer = audio;
               });
             },
           )),
@@ -75,7 +74,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void onSubmitted(String value) async {
-    print(value);
     if (value.isEmpty) {
       return showDialog(
         context: context,
@@ -85,33 +83,20 @@ class _MainScreenState extends State<MainScreen> {
       final result = await Navigator.of(context).pushNamed(
         SearchScreen.routeName,
         arguments: ScreenArguments(search: value, audioPlayer: _audioPlayer),
-        // maybe its not sending it correctly
       );
 
       if (result != null) {
         _poppedAudioPlayer = result;
         if (_audioPlayer != null) {
-          print('widget is ${_audioPlayer.title}');
           if (_poppedAudioPlayer.audio.path != _audioPlayer.audio.path) {
             setState(() {
-              _audioPlayer =
-                  _poppedAudioPlayer; //its setting it but not sending
+              _audioPlayer = _poppedAudioPlayer;
             });
-            print('widget is ${_audioPlayer.title}');
-            // widget.onAudioplayerChange(widget.audioPlayer);
-            // widget.onSongChange(true);
-            //callback
           }
         } else {
           setState(() {
-            _audioPlayer = _poppedAudioPlayer; //its setting it but not sending
+            _audioPlayer = _poppedAudioPlayer;
           });
-          print('widget is $_audioPlayer');
-          //callback
-          //_poppedAudioPlayer
-          // widget.onAudioplayerChange(_poppedAudioPlayer);
-          // widget.onSongChange(true);
-          // print('should call?');
         }
       }
     }

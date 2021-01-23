@@ -1,17 +1,16 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/authentication.dart';
+import '../providers/models/audio_player.dart';
 import '../providers/models/playlist_songs.dart';
 import '../widgets/error_dialog.dart';
 import '../widgets/favorite_widget.dart';
-import '../providers/models/audio_player.dart';
 import '../widgets/player_widget_small.dart';
 import 'screen_arguments.dart';
-import '../widgets/app_drawer.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 
-class FavoriteScreen extends StatefulWidget { 
+class FavoriteScreen extends StatefulWidget {
   static final routeName = 'create-playlist';
   @override
   _FavoriteScreenState createState() => _FavoriteScreenState();
@@ -35,8 +34,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   void didChangeDependencies() {
-    print('dependecies');
-
     super.didChangeDependencies();
   }
 
@@ -52,9 +49,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenArguments args = ModalRoute.of(context).settings.arguments;     //need to send when it starts here
-    print(args);
-    print(_assetsAudioPlayer.current.value);    //when song changes it doesnt show
+    ScreenArguments args = ModalRoute.of(context)
+        .settings
+        .arguments; //need to send when it starts here
+
     if (args.audioPlayer != null) {
       if (_audioPlayer != null) {
         if (_audioPlayer.audio.path !=
@@ -74,11 +72,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         });
       }
     }
-    print(_isPlaying);
     return WillPopScope(
       onWillPop: () {
         Navigator.of(context).pop(_audioPlayer);
-        print('pop');
       },
       child: Scaffold(
         appBar: AppBar(
@@ -87,8 +83,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              //doesnt work when system presses back set onWillPop
-              print('pop');
               Navigator.of(context).pop(_audioPlayer);
             },
           ),
@@ -104,7 +98,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   if (dataSnapshot.error != null) {
-                    print(dataSnapshot.error);
                     return ErrorDialog('Try again later');
                   } else {
                     return Column(
@@ -131,7 +124,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                     itemCount: _playlistSongs.total,
                                     itemBuilder: (ctx, i) {
                                       return FavoriteWidget(
-                                        
                                         audioPlayer: _audioPlayer,
                                         playlistSongs: _playlistSongs,
                                         i: i,

@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../screens/settings_screen.dart';
-import '../screens/main_screen.dart';
+import '../providers/models/audio_player.dart';
 import '../screens/favorite_screen.dart';
 import '../screens/screen_arguments.dart';
-import '../providers/models/audio_player.dart';
+import '../screens/settings_screen.dart';
 
 class AppDrawer extends StatelessWidget {
-
-  
-  AudioPlayer audioPlayer;
+  final AudioPlayer audioPlayer;
 
   AppDrawer({this.audioPlayer});
 
   @override
   Widget build(BuildContext context) {
-
-    print(audioPlayer.audio.metas.title);
-    
     return Drawer(
         child: ListView(
       children: [
@@ -43,11 +37,7 @@ class AppDrawer extends StatelessWidget {
             color: Theme.of(context).primaryIconTheme.color,
           ),
           onTap: () {
-            // if (fromMain) {
-              Navigator.of(context).pop();
-            // } else {
-            //   Navigator.of(context).popAndPushNamed(MainScreen.routeName);
-            // }
+            Navigator.of(context).pop();
           },
         ),
         Divider(),
@@ -62,25 +52,18 @@ class AppDrawer extends StatelessWidget {
             color: Theme.of(context).primaryIconTheme.color,
           ),
           onTap: () {
-            // if (fromFavorite) {
-            //   Navigator.of(context).pop();
-            // } else {
-              print('from drawer $audioPlayer');
-              Navigator.of(context).popAndPushNamed(  //need to send audioplayer and stuff
-                FavoriteScreen.routeName, // get the result to send it to main
-                arguments: ScreenArguments(audioPlayer: audioPlayer),
-              );
+            Navigator.of(context).popAndPushNamed(
+              //need to send audioplayer and stuff
+              FavoriteScreen.routeName, // get the result to send it to main
+              arguments: ScreenArguments(audioPlayer: audioPlayer),
+            );
             // }
           },
         ),
         Divider(),
         ListTile(
             onTap: () {
-              // if (fromSettings) {
-              //   Navigator.of(context).pop();
-              // } else {
-                Navigator.of(context).popAndPushNamed(SettingsScreen.routeName);
-              // }
+              Navigator.of(context).popAndPushNamed(SettingsScreen.routeName);
             },
             leading: Icon(
               Icons.settings,

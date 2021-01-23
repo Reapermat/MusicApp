@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/app_drawer.dart';
+import '../screens/login_screen.dart';
 import '../themes/theme_data.dart';
 import '../widgets/theme_button.dart';
-import '../screens/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   static final routeName = 'settings-route';
@@ -13,11 +12,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _blueClicked = true;
-  bool _pinkClicked = false;
-  bool _yellowClicked =
-      false; //this will have to change according to getTheme or smth
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,67 +37,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Container(
-              //   height: 64,
-              //   width: 64,
-              //   margin: EdgeInsets.all(15),
-              //   child: RaisedButton(
-              //       shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(15),
-              //           side: BorderSide(
-              //               color: _blueClicked ? Colors.white : blueAccent)),
-              //       color: blueAccent,
-              //       onPressed: () {
-              //         setState(() {
-              //           _blueClicked = !_blueClicked;
-              //           if (_blueClicked) {
-              //             _pinkClicked = false;
-              //             _yellowClicked = false;
-              //           }
-              //         });
-              //       }),
-              // ),
-              // Container(
-              //   height: 64,
-              //   width: 64,
-              //   margin: EdgeInsets.all(15),
-              //   child: RaisedButton(
-              //       shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(15),
-              //           side: BorderSide(
-              //               color: _pinkClicked ? Colors.white : pinkAccent)),
-              //       color: pinkAccent,
-              //       onPressed: () {
-              //         setState(() {
-              //           _pinkClicked = !_pinkClicked;
-              //           if (_pinkClicked) {
-              //             _blueClicked = false;
-              //             _yellowClicked = false;
-              //           }
-              //         });
-              //       }),
-              // ),
-              // Container(
-              //   height: 64,
-              //   width: 64,
-              //   margin: EdgeInsets.all(15),
-              //   child: RaisedButton(
-              //       shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(15),
-              //           side: BorderSide(
-              //               color: _yellowClicked ? Colors.white : yellowAccent)),
-              //       color: yellowAccent,
-              //       onPressed: () {
-              //         setState(() {
-              //           _yellowClicked = !_yellowClicked;
-              //           if (_yellowClicked) {
-              //             _pinkClicked = false;
-              //             _yellowClicked = false;
-              //           }
-              //         });
-              //       }),
-              // ),
-
               ThemeButton(
                 buttonThemeData: blueTheme,
               ),

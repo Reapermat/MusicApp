@@ -20,7 +20,6 @@ class PlayingControlSmall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return LayoutBuilder(
       builder: (ctx, constraints) {
         return Row(
@@ -30,21 +29,21 @@ class PlayingControlSmall extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 50),
               padding: EdgeInsets.all(4),
-              // height: 64,
               height: constraints.biggest.height * 0.74,
               width: constraints.biggest.width * 0.33,
               child: RaisedButton(
                 elevation: 8,
                 color: Theme.of(context).accentColor,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),),
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 padding: EdgeInsets.all(8),
                 onPressed: this.onPlay,
                 child: Icon(
                   isPlaying ? Icons.pause : Icons.play_arrow,
-                  size:
-                      min(constraints.biggest.height, constraints.biggest.width) * 0.4,
-                      // contraints.maxHeight * 0.585
+                  size: min(constraints.biggest.height,
+                          constraints.biggest.width) *
+                      0.4,
                 ),
               ),
             ),

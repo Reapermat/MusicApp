@@ -27,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    // Every listener should be canceled, the same should be done with this stream.
     _onDestroy.cancel();
     _onUrlChanged.cancel();
     _onStateChanged.cancel();
@@ -42,47 +41,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
     flutterWebviewPlugin.close();
 
-    // Add a listener to on destroy WebView, so you can make came actions.
-    _onDestroy = flutterWebviewPlugin.onDestroy.listen((_) {
-      print("destroy");
-    });
+    _onDestroy = flutterWebviewPlugin.onDestroy.listen((_) {});
 
-    _onStateChanged =
-        flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {
-      print("onStateChanged: ${state.type} ${state.url}");
-    });
+    _onStateChanged = flutterWebviewPlugin.onStateChanged
+        .listen((WebViewStateChanged state) {});
 
     _onError =
         flutterWebviewPlugin.onHttpError.listen((WebViewHttpError state) {
       if (state.code == '-2') {
-        //po paru sekundach moze wrocic tam i dac alert ze cos poszlo nie tak
         flutterWebviewPlugin.close().then((_) {
           Future.delayed(Duration(seconds: 2)).then((_) {
-            Navigator.of(context)
-                .pushNamed(OnBoardScreen.routeName, arguments: ScreenArguments(error: true));
-            print('this is opening?');
+            Navigator.of(context).pushNamed(OnBoardScreen.routeName,
+                arguments: ScreenArguments(error: true));
           });
         });
         dispose();
-        //then from the package  it just shows circular indicator
-        // flutterWebviewPlugin.show().catchError((error){
-        //   print(error);
-        //   return ErrorDialog('An error has accured');
-        // });
       }
     });
 
-    // Add a listener to on url changed
     _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) {
       if (mounted) {
         setState(() {
-          print("URL changed: $url");
           if (url.startsWith('https://www.google.com/oauth2redirect')) {
             RegExp regExp = new RegExp("code=(.*)");
             this.code = regExp.firstMatch(url)?.group(1);
-            print("code $code");
             Provider.of<Authentication>(context, listen: false).setCode(code);
-            // Tutaj juz mozna sie wyjebac gdzies np
             Navigator.of(context).pushNamedAndRemoveUntil(
                 MainScreen.routeName, (Route<dynamic> route) => false);
             flutterWebviewPlugin.close();

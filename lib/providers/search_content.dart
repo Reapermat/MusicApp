@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import './models/search.dart';
 import 'package:http/http.dart' as http;
 
-class SearchContent extends ChangeNotifier {
-  
+import './models/search.dart';
 
+class SearchContent extends ChangeNotifier {
   Search _search;
 
   Future<Search> getSearchContent(String content) async {

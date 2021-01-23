@@ -1,18 +1,14 @@
 import 'package:MusicApp/providers/models/audio_player.dart';
-
-import '../screens/screen_arguments.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 
 import '../providers/authentication.dart';
 import '../providers/models/tracklist.dart';
 import '../providers/models/user.dart';
-import 'search_bar_main.dart';
 import 'error_dialog.dart';
-import 'player_widget_small.dart';
 import 'gridtile_main.dart';
-import '../screens/favorite_screen.dart';
+import 'player_widget_small.dart';
 
 class MainWidget extends StatefulWidget {
   final Future Function(AudioPlayer) onAudioplayerChange;
@@ -52,12 +48,10 @@ class _MainWidgetState extends State<MainWidget> {
 
   @override
   void didChangeDependencies() {
-    // print('but isnt');
-    if (widget.poppedAudioPlayer != null) {
-      _audioPlayer = widget.poppedAudioPlayer;
-      _isPlaying = true;
-      print('this should get it $_audioPlayer');
-    }
+    // if (widget.poppedAudioPlayer != null) {
+    //   _audioPlayer = widget.poppedAudioPlayer;
+    //   _isPlaying = true;
+    // }
     super.didChangeDependencies();
   }
 
@@ -84,7 +78,6 @@ class _MainWidgetState extends State<MainWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.poppedAudioPlayer != null) {
-      print(widget.poppedAudioPlayer.audio.path);
       if (_audioPlayer != null) {
         if (_audioPlayer.audio.path !=
                 _assetsAudioPlayer.current.value.audio.audio.path &&
@@ -104,8 +97,6 @@ class _MainWidgetState extends State<MainWidget> {
       }
     }
 
-    // print(_assetsAudioPlayer.current.value.audio.audio.path);
-
     return FutureBuilder(
       future: _tokenFuture,
       builder: (ctx, dataSnapshot) {
@@ -113,34 +104,18 @@ class _MainWidgetState extends State<MainWidget> {
           return Center(child: CircularProgressIndicator());
         } else {
           if (dataSnapshot.error != null) {
-            print(dataSnapshot.error);
             return ErrorDialog('Try again later');
           } else {
             if (_isInit) {
               creatingPlaylist();
               _isInit = false;
             }
-            // if (_assetsAudioPlayer.current.value != null) {
-            //   if (_assetsAudioPlayer.current.value.audio.audio.path !=
-            //       _audioPlayer.audio.path) {
-            //     print('in assets different');
-            //     setState(() {
-            //       _audioPlayer = AudioPlayer(
-            //           audio: _assetsAudioPlayer.current.value.audio.audio,
-            //           title: _assetsAudioPlayer
-            //               .current.value.audio.audio.metas.title,
-            //           imageUrl: _assetsAudioPlayer
-            //               .current.value.audio.audio.metas.image.path);
-            //     });
-            //   }
-            // }
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   flex: 1,
-                  // fit: FlexFit.loose,
                   child: Container(
                     padding: EdgeInsets.all(10),
                     height: MediaQuery.of(context).size.height * 0.1,
@@ -158,37 +133,6 @@ class _MainWidgetState extends State<MainWidget> {
                     ),
                   ),
                 ),
-                // Flexible(
-                //   flex: 0,
-                //   child: SearchBarMain(
-                //     audioPlayer: _audioPlayer,
-                //     onSongChange: (bool val) {
-                //       _isPlaying = val;
-                //       print(_isPlaying);
-                //     },
-                //     onAudioplayerChange: (AudioPlayer audio) {
-                //       print('sent audio $audio');
-                //       setState(() {
-                //         _audioPlayer = audio;
-                //       });
-                //     },
-                //   ),
-                //   // child: FlatButton(
-                //   //     child: Text('Playlist'),
-                //   //     onPressed: () async {
-                //   //       final result = await Navigator.of(context).pushNamed(
-                //   //           PlaylistScreen.routeName,
-                //   //           arguments:
-                //   //               ScreenArguments(audioPlayer: _audioPlayer));
-                //   //       print(result);
-                //   //       if (result != null) {
-                //   //         setState(() {
-                //   //           _audioPlayer = result;
-                //   //           _isPlaying = true;
-                //   //         });
-                //   //       }
-                //   //     }),
-                // ),
                 Expanded(
                   flex: 4,
                   // fit: FlexFit.loose,
@@ -196,22 +140,13 @@ class _MainWidgetState extends State<MainWidget> {
                     fit: StackFit.loose,
                     children: [
                       Container(
-                        //this is the container
                         margin: EdgeInsets.only(left: 60.0, top: 60),
-                        // alignment: Alignment.topRight,
                         height: MediaQuery.of(context).size.height,
-                        // width: ,
-                        // color: color,
                         decoration: BoxDecoration(
                           color: Theme.of(context).accentColor,
                           borderRadius:
                               BorderRadius.only(topLeft: Radius.circular(15)),
                         ),
-                        // child: SizedBox(
-                        //   height: MediaQuery.of(context).size.height * 0.5,
-                        // ),
-                        //has to have child
-                        //maybe boxdecoration
                       ),
                       RefreshIndicator(
                         onRefresh: () async {
@@ -228,8 +163,6 @@ class _MainWidgetState extends State<MainWidget> {
                           }
                         },
                         child: Container(
-                          // height: MediaQuery.of(context).size.height * 0.6,
-                          // width: MediaQuery.of(context).size.width,
                           padding:
                               EdgeInsets.only(left: 10, right: 10, top: 10),
                           child: GridView.builder(
@@ -247,7 +180,6 @@ class _MainWidgetState extends State<MainWidget> {
                                     _audioPlayer = audio; //send it to screen
                                     widget.onAudioplayerChange(_audioPlayer);
                                     widget.onSongChange(true);
-                                    print('sent');
                                   });
                                 },
                               );

@@ -1,12 +1,10 @@
 import 'package:MusicApp/providers/models/audio_player.dart';
-import 'package:flutter/material.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
-import '../providers/models/search.dart';
 import './error_dialog.dart';
-import '../providers/authentication.dart';
 import '../providers/models/audio_player.dart';
+import '../providers/models/search.dart';
 
 class SearchListView extends StatefulWidget {
   Search searchElem;
@@ -81,7 +79,7 @@ class _SearchListViewState extends State<SearchListView> {
             widget.onAudioplayerChange(_audioPlayer);
             // });
           })
-              //when song ends then start playing that playlist from main?!!!!
+              //when song ends then start playing that playlist from main?
               //when song ends nothing happens for now
 
               .catchError((error) {
@@ -98,19 +96,10 @@ class _SearchListViewState extends State<SearchListView> {
       child: ListTile(
         contentPadding:
             EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
-        leading:
-            // CircleAvatar(
-            //   backgroundImage: NetworkImage(searchList.album.coverSmall),
-            // ),
-
-            ClipRRect(
+        leading: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: Image.network(
             searchList.album.coverMedium,
-            // _assetsAudioPlayer.current.value.audio.audio.metas.image.path,
-            // widget.playlist.audios.elementAt(index).
-            // height: constraints.maxHeight * 0.585,
-            // width: 25,
             fit: BoxFit.cover,
           ),
         ),
@@ -122,33 +111,11 @@ class _SearchListViewState extends State<SearchListView> {
     );
   }
 
-  // _getFavorite() async {
-  //   //spierdolone to jest //trzeba porownac po porstu czy ten id jest w liscie czy nie jak jest to value smienic i tyle!!
-  //   Provider.of<Authentication>(context, listen: false)
-  //       .getPlaylist()
-  //       .then((songs) {
-  //     _isFavorite = false;
-  //     for (int i = 0; i < songs.data.length; i++) {
-  //       if (_assetsAudioPlayer.current.value.audio.audio.metas.id ==
-  //           songs.data.elementAt(i).id.toString()) {
-  //         print(i);
-  //         // setState(() {
-  //         _isFavorite = true;
-  //         // });
-  //         // break;
-  //       }
-  //     }
-  //   });
-  //   return _isFavorite;
-  // }
   _listen() async {
     _assetsAudioPlayer.playlistAudioFinished.listen((stopped) async {
       Future.delayed(Duration(seconds: 1)).then((_) async {
-        print(_assetsAudioPlayer.current.value.audio.audio.path);
-        print(_audioPlayer.audio.path);
         if (_assetsAudioPlayer.current.value.audio.audio.path !=
             _audioPlayer.audio.path) {
-          
           _audioPlayer = AudioPlayer(
               audio: _assetsAudioPlayer.current.value.audio.audio,
               title: _assetsAudioPlayer.current.value.audio.audio.metas.title,
@@ -157,7 +124,6 @@ class _SearchListViewState extends State<SearchListView> {
               isFavorite: _isFavorite);
 
           widget.onAudioplayerChange(_audioPlayer);
-
         }
       });
     });

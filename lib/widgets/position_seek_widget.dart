@@ -74,7 +74,6 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
           ),
         ),
       ),
-
       Container(
         height: 20,
         child: ListTile(
@@ -82,53 +81,6 @@ class _PositionSeekWidgetState extends State<PositionSeekWidget> {
           trailing: Text(durationToString(widget.duration)),
         ),
       ),
-
-      // Row(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: <Widget>[
-      //     SizedBox(
-      //       width: 40,
-      //       child: Text(durationToString(widget.currentPosition)),
-      //     ),
-      //     Expanded(
-      //       child: SliderTheme(
-      //         data: SliderThemeData(
-      //           activeTrackColor: Colors.white,
-      //           inactiveTrackColor: Color.fromRGBO(71, 71, 71, 1.0),
-      //           trackHeight: 3.0,
-      //           thumbColor: Colors.white,
-      //           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5.0),
-      //         ),
-      //         child: Slider(
-      //           min: 0.0,
-      //           max: widget.duration.inMilliseconds.toDouble(),
-      //           value: percent * widget.duration.inMilliseconds.toDouble(),
-      //           onChangeEnd: (newValue) {
-      //             setState(() {
-      //               listenOnlyUserInterraction = false;
-      //               widget.seekTo(_visibleValue);
-      //             });
-      //           },
-      //           onChangeStart: (_) {
-      //             setState(() {
-      //               listenOnlyUserInterraction = true;
-      //             });
-      //           },
-      //           onChanged: (newValue) {
-      //             setState(() {
-      //               final to = Duration(milliseconds: newValue.floor());
-      //               _visibleValue = to;
-      //             });
-      //           },
-      //         ),
-      //       ),
-      //     ),
-      //     SizedBox(
-      //       width: 40,
-      //       child: Text(durationToString(widget.duration)),
-      //     ),
-      //   ],
-      // ),
     ]);
   }
 }

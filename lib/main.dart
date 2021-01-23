@@ -42,22 +42,22 @@ class MyApp extends StatelessWidget {
     //     ),
     //     ChangeNotifierProvider(create: (ctx) => ThemeNotifier(blueTheme))
     //   ],
-    //   child: 
+    //   child:
     final themeProvider = Provider.of<ThemeNotifier>(context);
-      return MaterialApp(
-        title: 'Moosic',
-        theme: themeProvider.getTheme(),
-        home: MyHomePage(title: 'Home Page'),
-        initialRoute: '/',
-        routes: {
-          LoginScreen.routeName: (ctx) => LoginScreen(),
-          MainScreen.routeName: (ctx) => MainScreen(),
-          SearchScreen.routeName: (ctx) => SearchScreen(),
-          CurrentSongScreen.routeName: (ctx) => CurrentSongScreen(),
-          FavoriteScreen.routeName: (ctx) => FavoriteScreen(),
-          OnBoardScreen.routeName: (ctx) => OnBoardScreen(),
-          SettingsScreen.routeName: (ctx) => SettingsScreen(),
-        },
+    return MaterialApp(
+      title: 'Moosic',
+      theme: themeProvider.getTheme(),
+      home: MyHomePage(title: 'Home Page'),
+      initialRoute: '/',
+      routes: {
+        LoginScreen.routeName: (ctx) => LoginScreen(),
+        MainScreen.routeName: (ctx) => MainScreen(),
+        SearchScreen.routeName: (ctx) => SearchScreen(),
+        CurrentSongScreen.routeName: (ctx) => CurrentSongScreen(),
+        FavoriteScreen.routeName: (ctx) => FavoriteScreen(),
+        OnBoardScreen.routeName: (ctx) => OnBoardScreen(),
+        SettingsScreen.routeName: (ctx) => SettingsScreen(),
+      },
       // ),
     );
   }
@@ -94,19 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      // body: error == true
-      //     ? AlertDialog(
-      //         title: Text('An Error Occured!'),
-      //         content: Text('Check internet connection'),
-      //         actions: <Widget>[
-      //             FlatButton(
-      //                 child: Text('Okay'),
-      //                 onPressed: () {
-      //                   setState(() {
-      //                     error = false;
-      //                   });
-      //                 })
-      //           ]) :
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -114,33 +101,5 @@ class _MyHomePageState extends State<MyHomePage> {
         // child: OnBoardScreen(),
       ),
     );
-
-    // return Scaffold(  //this will be for the last page
-    //   body: error == true
-    //       ? AlertDialog(
-    //           title: Text('An Error Occured!'),
-    //           content: Text('Check internet connection'),
-    //           actions: <Widget>[
-    //               FlatButton(
-    //                   child: Text('Okay'),
-    //                   onPressed: () {
-    //                     setState(() {
-    //                       error = false;
-    //                     });
-    //                   })
-    //             ])
-    // //       : Container(
-    //           margin: EdgeInsets.all(30),
-    //           height: MediaQuery.of(context).size.height,
-    //           width: MediaQuery.of(context).size.width,
-    //         ),
-    //   floatingActionButton: FloatingActionButton.extended(
-    //     onPressed: () {
-    //       Navigator.of(context).pushNamed(LoginScreen.routeName);
-    //     },
-    //     label: Text('Authorize'),
-    //     icon: Icon(Icons.lock_open),
-    //   ),
-    // );
   }
 }

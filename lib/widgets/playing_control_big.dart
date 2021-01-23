@@ -45,28 +45,17 @@ class PlayingControlBig extends StatelessWidget {
                 onPressed: this.onPrevious,
                 child: Icon(
                   Icons.skip_previous_rounded,
-  color: Colors.white,
+                  color: Colors.white,
                   size: min(constraints.biggest.height,
                           constraints.biggest.width) *
                       0.4,
-                  // contraints.maxHeight * 0.585
                 ),
               ),
             ),
             SizedBox(
               width: 12,
             ),
-            // NeumorphicButton(
-            //   padding: EdgeInsets.all(8),
-            //   onPressed: this.onPlay,
-            //   child: Icon(
-            //     isPlaying ? Icons.pause : Icons.play_arrow,
-            //   ),
-            // ),
             Container(
-              // margin: EdgeInsets.only(left: 50),
-              // padding: EdgeInsets.all(4),
-              // height: 64,
               height: constraints.biggest.height * 0.58,
               width: constraints.biggest.width * 0.16,
               child: RaisedButton(
@@ -82,7 +71,6 @@ class PlayingControlBig extends StatelessWidget {
                   size: min(constraints.biggest.height,
                           constraints.biggest.width) *
                       0.4,
-                  // contraints.maxHeight * 0.585
                 ),
               ),
             ),
@@ -90,9 +78,6 @@ class PlayingControlBig extends StatelessWidget {
               width: 12,
             ),
             Container(
-              // margin: EdgeInsets.only(left: 50),
-              // padding: EdgeInsets.all(4),
-              // height: 64,
               height: constraints.biggest.height * 0.58,
               width: constraints.biggest.width * 0.16,
               child: RaisedButton(
@@ -109,7 +94,6 @@ class PlayingControlBig extends StatelessWidget {
                   size: min(constraints.biggest.height,
                           constraints.biggest.width) *
                       0.4,
-                  // contraints.maxHeight * 0.585
                 ),
               ),
             ),
