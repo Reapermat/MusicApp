@@ -47,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
     //   onWillPop: _onBackPressed,
     //   child:
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: _searchBar.build(context),
       drawer: AppDrawer(
         audioPlayer:

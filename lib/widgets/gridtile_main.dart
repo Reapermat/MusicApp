@@ -34,6 +34,7 @@ class _GridtileMainState extends State<GridtileMain> {
 
   @override
   Widget build(BuildContext context) {
+    // _isFavorite = false;
     // if (_initState) {
     _checkFavorite(widget.playlist.audios.elementAt(
         widget.i)); //this is the best place to check the favorite status
@@ -87,6 +88,7 @@ class _GridtileMainState extends State<GridtileMain> {
                 });
                 _initState = false;
               });
+              _isFavorite = false;
             },
           ),
         ),
@@ -151,9 +153,10 @@ class _GridtileMainState extends State<GridtileMain> {
     var provider = Provider.of<Authentication>(context, listen: false);
     return provider.checkSong(audio).then((value) {
       _isFavorite = value;
-      if (_isFavorite) {
-        setState(() {});
-      }
+      print(_isFavorite);
+      // if (_isFavorite) {
+      //   setState(() {});
+      // }
     });
   }
 }

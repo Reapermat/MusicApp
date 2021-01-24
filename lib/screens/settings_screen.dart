@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/login_screen.dart';
 import '../themes/theme_data.dart';
 import '../widgets/theme_button.dart';
+import '../screens/user_data_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   static final routeName = 'settings-route';
@@ -64,7 +65,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             child: ListTile(
               onTap: () {
-                //go to another screen with info
+                Navigator.of(context).pushNamed(
+                  UserDataScreen.routeName,
+                );
               },
               title: Text(
                 'My data',

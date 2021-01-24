@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import './providers/authentication.dart';
 import './providers/search_content.dart';
@@ -13,6 +14,7 @@ import 'screens/main_screen.dart';
 import 'screens/onboard_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/user_data_screen.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -44,6 +46,12 @@ class MyApp extends StatelessWidget {
     //   ],
     //   child:
     final themeProvider = Provider.of<ThemeNotifier>(context);
+
+SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  systemNavigationBarColor: blueTheme.primaryColor,
+));
+    
+
     return MaterialApp(
       title: 'Moosic',
       theme: themeProvider.getTheme(),
@@ -57,6 +65,7 @@ class MyApp extends StatelessWidget {
         FavoriteScreen.routeName: (ctx) => FavoriteScreen(),
         OnBoardScreen.routeName: (ctx) => OnBoardScreen(),
         SettingsScreen.routeName: (ctx) => SettingsScreen(),
+        UserDataScreen.routeName: (ctx) => UserDataScreen(),
       },
       // ),
     );
@@ -102,4 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  
 }

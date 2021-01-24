@@ -83,6 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
         Navigator.of(context).pop(_audioPlayer);
       },
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           title: Text('Search'),
           centerTitle: true,

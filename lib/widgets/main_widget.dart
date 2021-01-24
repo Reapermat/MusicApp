@@ -77,6 +77,9 @@ class _MainWidgetState extends State<MainWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+    
+
     if (widget.poppedAudioPlayer != null) {
       if (_audioPlayer != null) {
         if (_audioPlayer.audio.path !=
@@ -236,4 +239,8 @@ class _MainWidgetState extends State<MainWidget> {
           ));
     }
   }
+
+  // static get getInfo{
+  //   return userList;
+  // }
 }

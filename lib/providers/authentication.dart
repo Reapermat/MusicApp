@@ -43,6 +43,10 @@ class Authentication extends ChangeNotifier {
     return _tracklist;
   }
 
+  User get getUserList{
+    return _userList;
+  }
+
   Future<void> getToken() async {
     final url =
         'https://connect.deezer.com/oauth/access_token.php?app_id=$appId&secret=$appSecret&code=$getCode&output=json';
@@ -73,6 +77,7 @@ class Authentication extends ChangeNotifier {
       _userList = userFromJson(response.body);
       _tracklist = _userList.tracklist;
       _userId = _userList.id;
+
 
       await getTracklist(_userList.tracklist);
       notifyListeners();
@@ -124,22 +129,30 @@ class Authentication extends ChangeNotifier {
 
 //fix this thing
   Future<bool> checkSong(Audio audio) async {
+    bool result = false;
     //this just checks it
     await getPlaylist().then((value) {
       for (int i = 0; i < value.total; i++) {
-        print('in this loop');
+        // print('in this loop');
+        // print('title ${value.data.elementAt(i).title}');
+        // print(audio.metas.title);
         if (value.data.elementAt(i).id.toString() ==
             audio.metas.id.toString()) {
-          print('same song!');
+          // print('same song!');
           // notifyListeners();
-          return true;
+          result = true;
+          return result;
         }
-        return false;
+        // return false;
       }
+      print('same Song here 1');
+      return result;
     }).catchError((onError) {
       throw onError;
     });
-    return false;
+    
+      print('same Song here 2');
+    return result;
   }
 
   Future<bool> addPlaylistSong(String songId) async {
@@ -160,8 +173,8 @@ class Authentication extends ChangeNotifier {
         return false;
       });
     } catch (error) {
-      return false;
-      // throw error;
+      // return false;
+      throw error;
     }
     return false;
   }
