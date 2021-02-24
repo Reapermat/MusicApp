@@ -96,6 +96,9 @@ class PlayingControlBig extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              width: 12,
+            ),
           ],
         );
       },

@@ -16,9 +16,10 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  SearchBar _searchBar;
+  
   AudioPlayer _audioPlayer;
   AudioPlayer _poppedAudioPlayer;
+  SearchBar _searchBar;
 
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
@@ -29,23 +30,16 @@ class _MainScreenState extends State<MainScreen> {
 
   _MainScreenState() {
     _searchBar = new SearchBar(
-        inBar: true,
-        buildDefaultAppBar: buildAppBar,
-        setState: setState,
-        onSubmitted: onSubmitted,
-        onCleared: () {
-          print("cleared");
-        },
-        onClosed: () {
-          print("closed");
-        });
+      inBar: true,
+      buildDefaultAppBar: buildAppBar,
+      setState: setState,
+      onSubmitted:
+          onSearch, // funkcja, która zostaje wykonana po naciśnięciu enter
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // return WillPopScope(
-    //   onWillPop: _onBackPressed,
-    //   child:
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: _searchBar.build(context),
@@ -74,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
     // );
   }
 
-  void onSubmitted(String value) async {
+  void onSearch(String value) async {
     if (value.isEmpty) {
       return showDialog(
         context: context,

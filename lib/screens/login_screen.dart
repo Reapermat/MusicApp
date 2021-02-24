@@ -84,9 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return new WebviewScaffold(
       url: loginUrl,
-      appBar: new AppBar(
-        title: new Text("Login to Deezer..."),
-      ),
+      appBar: new AppBar(),
     );
   }
 }

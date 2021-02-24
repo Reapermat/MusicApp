@@ -44,7 +44,7 @@ class PageViewWidget extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.035),
+                top: MediaQuery.of(context).size.height * 0.035,),
             child: Text(
               title,
               style: TextStyle(
@@ -55,13 +55,14 @@ class PageViewWidget extends StatelessWidget {
           ),
           Container(
             // height: MediaQuery.of(context).size.height * 0.3,
-            margin: EdgeInsets.only(top: 50, left: 30, right: 30),
+            margin: EdgeInsets.only(top: 50, left: 60, right: 60),
             child: Text(
               text,
               style: TextStyle(
                 fontSize: 18,
                 // color: Colors.white,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ],

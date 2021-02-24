@@ -12,7 +12,7 @@ class SearchContent extends ChangeNotifier {
     final url = 'https://api.deezer.com/search?q=$content';
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(url);   //oczekiwanie na pobranie danych za pomocą funkcji get
       _search = searchFromJson(response.body);
       return _search;
     } catch (error) {

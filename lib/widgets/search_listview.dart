@@ -27,9 +27,11 @@ class SearchListView extends StatefulWidget {
 }
 
 class _SearchListViewState extends State<SearchListView> {
+  // .withId - Pozwala na korzystanie z jednego strumienia muzycznego w calej aplikacji 
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
-  var _isFavorite = false;
   Audio _audio;
+  var _isFavorite = false;
+
   AudioPlayer _audioPlayer;
   @override
   Widget build(BuildContext context) {
@@ -44,36 +46,37 @@ class _SearchListViewState extends State<SearchListView> {
       onTap: () async {
         try {
           if (_assetsAudioPlayer.isPlaying.value) {
-            _assetsAudioPlayer.stop();
+            _assetsAudioPlayer.stop(); // gdy utwór już jest grany zatrzymuje ją
           }
           _audio = Audio.network(
-            '${searchList.preview}',
+            // przypisanie otrzymanych danych audio
+            '${searchList.preview}', // link do utworu
             metas: Metas(
+              // zapisywanie danych, które pózniej zostaną wyświetlone
               id: searchList.id.toString(),
-              title: searchList.title,
-              artist: searchList.artist.name,
-              album: searchList.album.title,
-              image: MetasImage.network(searchList.album.coverMedium),
+              title: searchList.title, // tytuł piosenki
+              artist: searchList.artist.name, // wykonawca utworu
+              album: searchList.album.title, // nazwa albumu
+              image:
+                  MetasImage.network(searchList.album.coverXl), //zdjęcia albumu
             ),
           );
-          // _audioPlayer = AudioPlayer(
-          //     audio: _audio,
-          //     title: searchList.title,
-          //     imageUrl: searchList.album.coverMedium);
 
-          await _assetsAudioPlayer //listen like in gridTileView
-              .open(_audio,
-                  showNotification: true,
-                  loopMode: LoopMode.single,
+          await _assetsAudioPlayer
+              .open(
+                  _audio, // otwarcie strumienia muzycznego, utwór rozpoczyna granie
+                  showNotification: true, // pokazuje powiadomienia systemowe
+                  loopMode: LoopMode.single, // zapętlenie granej piosenki
                   notificationSettings: NotificationSettings(
-                    stopEnabled: false,
+                    stopEnabled:
+                        false, //wyłączenie funkcji "stop" w powiadomieniach systemowych
                   ))
               .then((_) async {
             // _getFavorite().then(() {
             _audioPlayer = AudioPlayer(
                 audio: _audio,
                 title: searchList.title,
-                imageUrl: searchList.album.coverMedium,
+                imageUrl: searchList.album.coverXl,
                 isFavorite: _isFavorite);
             widget.onSongChange(true);
             widget.onAudioplayerChange(_audioPlayer);

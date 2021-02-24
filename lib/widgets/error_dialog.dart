@@ -12,7 +12,7 @@ class ErrorDialog extends StatelessWidget {
     return AlertDialog(
         backgroundColor: blueTheme.primaryColor,
         actionsPadding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),   // ustawienie kształtu Dialogu
         title: Text(
           'An Error Occured!',
           style: TextStyle(
@@ -24,13 +24,13 @@ class ErrorDialog extends StatelessWidget {
           Container(
             width: 110,
             height: 40,
-            child: OutlineButton(
-              shape: RoundedRectangleBorder(
+            child: OutlineButton(   // przycisk z widoczną ramką
+              shape: RoundedRectangleBorder(    // zaokrąglenie ramki
                   borderRadius: BorderRadius.circular(15)),
               textColor: Colors.white,
               borderSide: BorderSide(color: Colors.white),
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () {   
+                Navigator.of(context).pop();    //pop - wraca do poprzedniego ekranu
               },
               child: Text(
                 'Okay',

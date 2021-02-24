@@ -35,7 +35,7 @@ class _CurrentSongScreenState extends State<CurrentSongScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Front Page'),
+          title: Text('Now playing'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {

@@ -54,6 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   _getSearch() async {
     var provider = Provider.of<SearchContent>(context, listen: false);
+    // Provider - tworzy bezpośredni kanał komunikacyjny z podaną klasą
     try {
       return await provider.getSearchContent(search);
     } catch (error) {

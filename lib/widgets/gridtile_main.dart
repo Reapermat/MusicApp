@@ -30,25 +30,18 @@ class _GridtileMainState extends State<GridtileMain> {
   var _isFavorite = false;
   var _initState = true;
 
-  
-
   @override
   Widget build(BuildContext context) {
-    // _isFavorite = false;
-    // if (_initState) {
-    _checkFavorite(widget.playlist.audios.elementAt(
-        widget.i)); //this is the best place to check the favorite status
-    //   _initState = false;
-    // }
+    _checkFavorite(widget.playlist.audios.elementAt(widget.i));
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: GridTile(
-        child: GestureDetector(
-          onTap: () async {
+        child: GestureDetector(   // Wychwytuje gesty użytkownika
+          onTap: () async {       // Wychwytuje dotyk ekranu
             try {
               if (_assetsAudioPlayer.isPlaying.value) {
-                _assetsAudioPlayer.stop();
+                _assetsAudioPlayer.stop();  
               }
 
               await startMusicOnClick();
@@ -74,8 +67,7 @@ class _GridtileMainState extends State<GridtileMain> {
           trailing: IconButton(
             icon: _isFavorite
                 ? Icon(Icons.favorite)
-                : Icon(Icons
-                    .favorite_border), //need to check if song is in favorite
+                : Icon(Icons.favorite_border),
             onPressed: () {
               //add to Favorites
               _initState = true;

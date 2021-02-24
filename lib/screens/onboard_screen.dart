@@ -22,19 +22,23 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
   }
 
   bool error = false;
-  final int _numPages = 3;
-  final PageController _pageController = PageController(initialPage: 0);
+  final int _numPages = 3; // liczba stron
+  final PageController _pageController =
+      PageController(initialPage: 0); //zainicjowanie pierwszej strony
   int _currentPage = 0;
 
   List<Widget> _buildPageIndicator() {
+    // ilość wskażników jest oparta na ilości stron (_numPages)
     List<Widget> list = [];
     for (int i = 0; i < _numPages; i++) {
       list.add(i == _currentPage ? _indicator(true) : _indicator(false));
     }
     return list;
+    // zwracana jest lista wskażników, która posiada widoki z metody _indicator np (aktywy, nieaktywny, nieaktywny)
   }
 
   Widget _indicator(bool isActive) {
+    // widok wskażnika pokazujący obecną strone
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
       margin: EdgeInsets.symmetric(horizontal: 8.0),
@@ -101,22 +105,25 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                       });
                     },
                     children: [
+                      // elementy które zostaną wyświetlone na każdej stronie
+                      // klasa stworzona, aby obsłużyć widoki elemetów pageView'a (Ustawienie czcionki, ustalenie marginesów)
                       PageViewWidget(
                         title: 'Welcome',
                         text:
-                            'This is an application that I have created for my Engineering Thesis. \nThis project is a music application using the Deezer API.',
+                            'This is an application that I have created for my Engineering Thesis. This project is a music application using the Deezer API.',
                         color: blueAccent,
                       ),
+                      // klasa stworzona, aby obsłużyć widoki elemetów pageView'a (Ustawienie czcionki, ustalenie marginesów)
                       PageViewWidget(
                         title: 'Functionality',
                         text:
-                            'The main functionality of this application is the recommended songs for each user individually. \nYou can also search for songs and add them to your favorites list!',
+                            'The main functionality of this application is the recommended songs for each user individually. You can also search for songs and add them to your favorites list!',
                         color: pinkAccent,
                       ),
+                      // klasa stworzona, aby obsłużyć widoki elemetów pageView'a (Ustawienie czcionki, ustalenie marginesów)
                       PageViewWidget(
                         title: "Let's get started!",
-                        text:
-                            'Sign up and start exploring for new music!',
+                        text: 'Sign up and start exploring for new music!',
                         color: yellowAccent,
                       ),
                     ],

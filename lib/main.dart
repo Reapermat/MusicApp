@@ -17,18 +17,22 @@ import 'screens/settings_screen.dart';
 import 'screens/user_data_screen.dart';
 
 void main() {
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: (ctx) => Authentication(),
-      ),
-      ChangeNotifierProvider(
-        create: (ctx) => SearchContent(),
-      ),
-      ChangeNotifierProvider(create: (ctx) => ThemeNotifier(blueTheme))
-    ],
-    child: MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Authentication(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => SearchContent(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => ThemeNotifier(blueTheme),
+        )
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -47,10 +51,9 @@ class MyApp extends StatelessWidget {
     //   child:
     final themeProvider = Provider.of<ThemeNotifier>(context);
 
-SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  systemNavigationBarColor: blueTheme.primaryColor,
-));
-    
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: blueTheme.primaryColor,
+    ));
 
     return MaterialApp(
       title: 'Moosic',
@@ -111,6 +114,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
-  
 }

@@ -152,13 +152,13 @@ class _MainWidgetState extends State<MainWidget> {
                         ),
                       ),
                       RefreshIndicator(
-                        onRefresh: () async {
+                        onRefresh: () async {   // funkcja uruchamia się po pociągnięciu listy w dół
                           try {
                             if (_playlist != null) {
                               _playlist.audios.clear();
                             }
-                            await _getTracklist();
-                          } catch (error) {
+                            await _getTracklist();  // pobieranie nowej listy proponowanych utworów
+                          } catch (error) {   // gdy jest error pojawia się pop-up
                             await showDialog(
                               context: context,
                               builder: (_) => ErrorDialog('Try again later'),
@@ -168,7 +168,7 @@ class _MainWidgetState extends State<MainWidget> {
                         child: Container(
                           padding:
                               EdgeInsets.only(left: 10, right: 10, top: 10),
-                          child: GridView.builder(
+                          child: GridView.builder(    // wyświetlenie listy proponowanych utworów
                             padding: const EdgeInsets.all(5.0),
                             itemCount: _tracklist.data.length,
                             itemBuilder: (ctx, i) {
