@@ -154,7 +154,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                         height: MediaQuery.of(context).size.height * 0.11,
                       ),
                 Padding(
-                  padding: const EdgeInsets.all(30.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: _buildPageIndicator(),

@@ -11,6 +11,7 @@ class PageViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (ctx, constraints) {
       return Column(
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Stack(
             // alignment: Alignment.topRight,
@@ -18,7 +19,8 @@ class PageViewWidget extends StatelessWidget {
             // overflow: Overflow.clip,
             children: [
               Container(
-                margin: EdgeInsets.only(left: 60.0),
+                margin: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.15),
                 alignment: Alignment.topRight,
                 decoration: BoxDecoration(
                   color: color,
@@ -44,25 +46,30 @@ class PageViewWidget extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.035,),
+              top: MediaQuery.of(context).size.height * 0.05,
+              bottom: MediaQuery.of(context).size.height * 0.035,
+              left: 20,
+              right: 20,
+            ),
             child: Text(
               title,
               style: TextStyle(
-                  fontSize: 30,
-                  // color: Colors.white,
-                  fontWeight: FontWeight.bold),
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.left,
             ),
           ),
           Container(
-            // height: MediaQuery.of(context).size.height * 0.3,
-            margin: EdgeInsets.only(top: 50, left: 60, right: 60),
+            height: MediaQuery.of(context).size.height * 0.2,
+            margin: EdgeInsets.only(left: 20, right: 20), //check this
             child: Text(
               text,
               style: TextStyle(
                 fontSize: 18,
                 // color: Colors.white,
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
             ),
           ),
         ],

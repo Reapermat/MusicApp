@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   
   AudioPlayer _audioPlayer;
   AudioPlayer _poppedAudioPlayer;
-  SearchBar _searchBar;
+  SearchBar _searchBar;   //text colour isnt white
 
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
@@ -30,18 +30,19 @@ class _MainScreenState extends State<MainScreen> {
 
   _MainScreenState() {
     _searchBar = new SearchBar(
-      inBar: true,
+      inBar: false,
       buildDefaultAppBar: buildAppBar,
       setState: setState,
       onSubmitted:
-          onSearch, // funkcja, która zostaje wykonana po naciśnięciu enter
+          onSearch,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: _searchBar.build(context),
       drawer: AppDrawer(
         audioPlayer:

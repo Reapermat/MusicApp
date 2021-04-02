@@ -18,10 +18,6 @@ class _CurrentSongScreenState extends State<CurrentSongScreen> {
   @override
   void didChangeDependencies() {
     ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    // if (args.audioPlayer != null) {
-    //   _audioPlayer = args.audioPlayer;
-
-    // }
 
     super.didChangeDependencies();
   }

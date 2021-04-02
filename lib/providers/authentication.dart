@@ -43,7 +43,7 @@ class Authentication extends ChangeNotifier {
     return _tracklist;
   }
 
-  User get getUserList{
+  User get getUserList {
     return _userList;
   }
 
@@ -77,7 +77,6 @@ class Authentication extends ChangeNotifier {
       _userList = userFromJson(response.body);
       _tracklist = _userList.tracklist;
       _userId = _userList.id;
-
 
       await getTracklist(_userList.tracklist);
       notifyListeners();
@@ -150,12 +149,13 @@ class Authentication extends ChangeNotifier {
     }).catchError((onError) {
       throw onError;
     });
-    
-      print('same Song here 2');
+
+    print('same Song here 2');
     return result;
   }
 
   Future<bool> addPlaylistSong(String songId) async {
+    bool _result = false;
     if (_playlistId == null) {
       await getPlaylist();
     }
@@ -163,20 +163,32 @@ class Authentication extends ChangeNotifier {
         'https://api.deezer.com/playlist/$_playlistId/tracks?access_token=$_accessToken&songs=$songId';
 
     try {
-      await http.post(url).then((response) {
+      await http.post(url).then((response) async {
         print('this is the response ${response.body}');
         if (response.body == 'true') {
           print('added');
-          return true;
+          _result = true;
+          return _result;
           // throw Error();
+        } else {
+          await http.delete(url).then((responseDelete) {
+            print('this is the delete Response ${responseDelete.body}');
+            if (responseDelete.body == 'true') {
+              print('deleted');
+              _result = false;
+              return _result;
+              // throw Error();
+            }
+          });
         }
-        return false;
+        _result = false;
+        return _result;
       });
     } catch (error) {
       // return false;
       throw error;
     }
-    return false;
+    return _result;  //cuz of this
   }
 
   Future<PlaylistSongs> deleteSong(String songId) async {

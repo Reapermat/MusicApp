@@ -28,7 +28,7 @@ class _GridtileMainState extends State<GridtileMain> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   AudioPlayer _audioPlayer;
   var _isFavorite = false;
-  var _initState = true;
+  // var _initState = true;
 
   @override
   Widget build(BuildContext context) {
@@ -70,15 +70,17 @@ class _GridtileMainState extends State<GridtileMain> {
                 : Icon(Icons.favorite_border),
             onPressed: () {
               //add to Favorites
-              _initState = true;
+              // _initState = true;
               Provider.of<Authentication>(context, listen: false)
                   .addPlaylistSong(
                       widget.playlist.audios.elementAt(widget.i).metas.id)
                   .then((value) {
+                    print('the value is $value');
                 setState(() {
-                  _isFavorite = !value;
+                  print('in here');
+                  _isFavorite = value;
                 });
-                _initState = false;
+                // _initState = false;
               });
               _isFavorite = false;
             },
@@ -145,7 +147,7 @@ class _GridtileMainState extends State<GridtileMain> {
     var provider = Provider.of<Authentication>(context, listen: false);
     return provider.checkSong(audio).then((value) {
       _isFavorite = value;
-      print(_isFavorite);
+      print('is favorite is $_isFavorite');
       // if (_isFavorite) {
       //   setState(() {});
       // }

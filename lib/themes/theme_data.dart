@@ -21,7 +21,6 @@ final Map<int, Color> colorSwatch = {
 final blueTheme = ThemeData(
   primarySwatch: MaterialColor(0xFF22222A, colorSwatch),
   primaryColorLight: Color.fromRGBO(46, 46, 54, 0.5),
-  // primaryColor: Colors.white,
   accentColor: blueAccent,
   primaryIconTheme: IconThemeData(color: Colors.white),
   fontFamily: 'Montserrat',
@@ -29,6 +28,7 @@ final blueTheme = ThemeData(
   textTheme: TextTheme(
     bodyText1: TextStyle(),
     bodyText2: TextStyle(),
+    headline4: TextStyle(),
   ).apply(
     bodyColor: Colors.white,
     displayColor: Colors.white,
@@ -44,6 +44,7 @@ final pinkTheme = ThemeData(
   textTheme: TextTheme(
     bodyText1: TextStyle(),
     bodyText2: TextStyle(),
+    headline4: TextStyle(),
   ).apply(
     bodyColor: Colors.white,
     displayColor: Colors.white,
@@ -59,6 +60,7 @@ final yellowTheme = ThemeData(
   textTheme: TextTheme(
     bodyText1: TextStyle(),
     bodyText2: TextStyle(),
+    headline4: TextStyle(),
   ).apply(
     bodyColor: Colors.white,
     displayColor: Colors.white,
