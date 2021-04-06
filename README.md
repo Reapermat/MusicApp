@@ -17,4 +17,4 @@ samples, guidance on mobile development, and a full API reference.
 
 How the app looks: 
 
-[![Music Application](https://img.youtu.be/aembg7I1fCQ/0.jpg)](https://youtu.be/aembg7I1fCQ "Music Application")
+[![Music Application](http://i3.ytimg.com/vi/aembg7I1fCQ/hqdefault.jpg)](https://youtu.be/aembg7I1fCQ "Music Application")
