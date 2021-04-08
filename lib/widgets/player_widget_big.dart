@@ -81,7 +81,6 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                   _audioPlayer.audio.path !=
                       _assetsAudioPlayer.current.value.audio.audio.path) ||
               (_audioPlayer == null)) {
-            print('hello');
             _checkFavorite(_assetsAudioPlayer.current.value.audio.audio)
                 .then((value) {
               setState(() {});
@@ -126,7 +125,7 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                   ),
                   Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 50, left: 15, right: 15),
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.08, left: 15, right: 15),
                     height: MediaQuery.of(context).size.height * 0.45,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
@@ -144,7 +143,7 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
               Expanded(
                 flex: 2,
                 child: Container(
-                  margin: EdgeInsets.all(15.0),
+                  margin: EdgeInsets.all(5.0),
                   alignment: Alignment.centerLeft,
                   // child: Text(this.widget.audioPlayer.title),
                   child: ListTile(
@@ -177,7 +176,7 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                               .addPlaylistSong(_songId)
                               .then((value) {
                             setState(() {
-                              _isFavorite = !value;
+                              _isFavorite = value;
                             });
                           });
                           // initState();
@@ -212,7 +211,6 @@ class _PlayerWidgetBigState extends State<PlayerWidgetBig> {
                           _getError = true;
                           return SizedBox();
                         } catch (error) {
-                          print('hello error');
                           return ErrorDialog('Try again later');
                         }
                       }

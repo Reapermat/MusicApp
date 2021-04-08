@@ -108,7 +108,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.all(15),
+                          margin: EdgeInsets.all(6),
                           child: TextFormField(
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(

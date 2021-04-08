@@ -11,15 +11,21 @@ class GridtileMain extends StatefulWidget {
 
   int i;
 
+  // bool initState;
+  bool checkFavorite;
+
   final Function(bool) onSongChange;
 
   final Future Function(AudioPlayer) onAudioplayerChange;
 
-  GridtileMain(
-      {@required this.playlist,
-      @required this.i,
-      @required this.onSongChange,
-      @required this.onAudioplayerChange});
+  GridtileMain({
+    @required this.playlist,
+    @required this.i,
+    @required this.onSongChange,
+    @required this.onAudioplayerChange,
+    @required this.checkFavorite,
+    // @required this.initState
+  });
   @override
   _GridtileMainState createState() => _GridtileMainState();
 }
@@ -28,20 +34,31 @@ class _GridtileMainState extends State<GridtileMain> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   AudioPlayer _audioPlayer;
   var _isFavorite = false;
-  // var _initState = true;
+  var _initState = true;
+  var _check = false;
 
   @override
   Widget build(BuildContext context) {
-    _checkFavorite(widget.playlist.audios.elementAt(widget.i));
+    _check = widget.checkFavorite;
 
+    if (_initState || _check) {
+      // _isFavorite = false;
+      print('init state is ${widget.checkFavorite}');
+      _checkFavorite(
+          widget.playlist.audios.elementAt(widget.i)); //only when refresh
+      _initState = false;
+      _check = false;
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: GridTile(
-        child: GestureDetector(   // Wychwytuje gesty użytkownika
-          onTap: () async {       // Wychwytuje dotyk ekranu
+        child: GestureDetector(
+          // Wychwytuje gesty użytkownika
+          onTap: () async {
+            // Wychwytuje dotyk ekranu
             try {
               if (_assetsAudioPlayer.isPlaying.value) {
-                _assetsAudioPlayer.stop();  
+                _assetsAudioPlayer.stop();
               }
 
               await startMusicOnClick();
@@ -70,13 +87,14 @@ class _GridtileMainState extends State<GridtileMain> {
                 : Icon(Icons.favorite_border),
             onPressed: () {
               //add to Favorites
-              // _initState = true;
+              _initState = true;
               Provider.of<Authentication>(context, listen: false)
                   .addPlaylistSong(
                       widget.playlist.audios.elementAt(widget.i).metas.id)
                   .then((value) {
-                    print('the value is $value');
+                print('the value is $value');
                 setState(() {
+                  // _initState=true;
                   print('in here');
                   _isFavorite = value;
                 });
@@ -147,10 +165,8 @@ class _GridtileMainState extends State<GridtileMain> {
     var provider = Provider.of<Authentication>(context, listen: false);
     return provider.checkSong(audio).then((value) {
       _isFavorite = value;
+
       print('is favorite is $_isFavorite');
-      // if (_isFavorite) {
-      //   setState(() {});
-      // }
     });
   }
 }

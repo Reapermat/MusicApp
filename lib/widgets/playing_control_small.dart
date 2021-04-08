@@ -27,8 +27,9 @@ class PlayingControlSmall extends StatelessWidget {
           children: [
             Container(
               margin: EdgeInsets.only(left: 50),
-              padding: EdgeInsets.all(4),
+              // padding: EdgeInsets.all(4),
               height: constraints.biggest.height * 0.74,
+              // height: constraints.maxHeight * 0.585,
               width: constraints.biggest.width * 0.33,
               child: RaisedButton(
                 elevation: 8,
@@ -36,13 +37,13 @@ class PlayingControlSmall extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(5),
                 onPressed: this.onPlay,
                 child: Icon(
                   isPlaying ? Icons.pause : Icons.play_arrow,
                   size: min(constraints.biggest.height,
                           constraints.biggest.width) *
-                      0.4,
+                      0.5,
                 ),
               ),
             ),

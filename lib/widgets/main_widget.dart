@@ -32,6 +32,7 @@ class _MainWidgetState extends State<MainWidget> {
   final _assetsAudioPlayer = AssetsAudioPlayer.withId("Audio_player");
   bool _isPlaying = false;
   bool _isInit = true;
+  bool _checkFavorite = false;
 
   @override
   void initState() {
@@ -77,9 +78,6 @@ class _MainWidgetState extends State<MainWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    
-
     if (widget.poppedAudioPlayer != null) {
       if (_audioPlayer != null) {
         if (_audioPlayer.audio.path !=
@@ -152,13 +150,17 @@ class _MainWidgetState extends State<MainWidget> {
                         ),
                       ),
                       RefreshIndicator(
-                        onRefresh: () async {   // funkcja uruchamia się po pociągnięciu listy w dół
+                        onRefresh: () async {
+                          //send smth to check the list for favorites
+                          // funkcja uruchamia się po pociągnięciu listy w dół
+                          _checkFavorite = true;
                           try {
                             if (_playlist != null) {
                               _playlist.audios.clear();
                             }
-                            await _getTracklist();  // pobieranie nowej listy proponowanych utworów
-                          } catch (error) {   // gdy jest error pojawia się pop-up
+                            await _getTracklist(); // pobieranie nowej listy proponowanych utworów
+                          } catch (error) {
+                            // gdy jest error pojawia się pop-up
                             await showDialog(
                               context: context,
                               builder: (_) => ErrorDialog('Try again later'),
@@ -168,11 +170,17 @@ class _MainWidgetState extends State<MainWidget> {
                         child: Container(
                           padding:
                               EdgeInsets.only(left: 10, right: 10, top: 10),
-                          child: GridView.builder(    // wyświetlenie listy proponowanych utworów
+                          child: GridView.builder(
+                            // wyświetlenie listy proponowanych utworów
                             padding: const EdgeInsets.all(5.0),
                             itemCount: _tracklist.data.length,
                             itemBuilder: (ctx, i) {
+                              bool _sendCheck = _checkFavorite;
+                              _checkFavorite = false;
                               return GridtileMain(
+                                // initState: _initStateFavorite,
+                                // },
+                                checkFavorite: _sendCheck,
                                 playlist: _playlist,
                                 i: i,
                                 onSongChange: (bool val) {
@@ -239,8 +247,4 @@ class _MainWidgetState extends State<MainWidget> {
           ));
     }
   }
-
-  // static get getInfo{
-  //   return userList;
-  // }
 }

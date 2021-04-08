@@ -40,7 +40,7 @@ class PlayingControlBig extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(5),
                 onPressed: this.onPrevious,
                 child: Icon(
                   Icons.skip_previous_rounded,
@@ -63,7 +63,7 @@ class PlayingControlBig extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(5),
                 onPressed: this.onPlay,
                 child: Icon(
                   isPlaying ? Icons.pause : Icons.play_arrow,
@@ -85,7 +85,7 @@ class PlayingControlBig extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(5),
                 onPressed: this.onNext,
                 child: Icon(
                   Icons.skip_next_sharp,
